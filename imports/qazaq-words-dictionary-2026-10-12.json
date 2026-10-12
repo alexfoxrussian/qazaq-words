@@ -1,0 +1,602 @@
+{
+  "format": "qazaq-words-dictionary",
+  "version": 1,
+  "topics": [
+    "Быт",
+    "Еда"
+  ],
+  "words": [
+    {
+      "kazakh": "жылдам, тез",
+      "russian": "быстрый / быстро",
+      "topics": []
+    },
+    {
+      "kazakh": "үлкен",
+      "russian": "большой",
+      "topics": []
+    },
+    {
+      "kazakh": "түйе",
+      "russian": "верблюд",
+      "topics": []
+    },
+    {
+      "kazakh": "ғарышкер",
+      "russian": "космонавт",
+      "topics": []
+    },
+    {
+      "kazakh": "мамандықтар",
+      "russian": "профессии",
+      "topics": []
+    },
+    {
+      "kazakh": "жеткізу",
+      "russian": "доставка / доставлять",
+      "topics": []
+    },
+    {
+      "kazakh": "орындық",
+      "russian": "стул",
+      "topics": [
+        "Быт"
+      ]
+    },
+    {
+      "kazakh": "кең",
+      "russian": "широкий / просторный",
+      "topics": []
+    },
+    {
+      "kazakh": "көз",
+      "russian": "глаз",
+      "topics": []
+    },
+    {
+      "kazakh": "сурет",
+      "russian": "рисунок / изображение",
+      "topics": []
+    },
+    {
+      "kazakh": "қызметкер",
+      "russian": "сотрудник / работник",
+      "topics": []
+    },
+    {
+      "kazakh": "терезе",
+      "russian": "окно",
+      "topics": []
+    },
+    {
+      "kazakh": "бала",
+      "russian": "ребёнок",
+      "topics": []
+    },
+    {
+      "kazakh": "ағылшын",
+      "russian": "английский",
+      "topics": []
+    },
+    {
+      "kazakh": "бүл",
+      "russian": "это",
+      "topics": []
+    },
+    {
+      "kazakh": "жігіт",
+      "russian": "парень",
+      "topics": []
+    },
+    {
+      "kazakh": "бос",
+      "russian": "свободно / свободный",
+      "topics": []
+    },
+    {
+      "kazakh": "себебі",
+      "russian": "потому что / причина",
+      "topics": []
+    },
+    {
+      "kazakh": "ұзын",
+      "russian": "длинный / высокий ростом",
+      "topics": []
+    },
+    {
+      "kazakh": "шаш",
+      "russian": "волосы",
+      "topics": []
+    },
+    {
+      "kazakh": "ақылды",
+      "russian": "умный",
+      "topics": []
+    },
+    {
+      "kazakh": "журналист",
+      "russian": "журналист",
+      "topics": []
+    },
+    {
+      "kazakh": "ер / еркек / ер адам",
+      "russian": "мужчина",
+      "topics": []
+    },
+    {
+      "kazakh": "бортсерік",
+      "russian": "бортпроводник / стюардесса",
+      "topics": []
+    },
+    {
+      "kazakh": "жұмыс",
+      "russian": "работа",
+      "topics": []
+    },
+    {
+      "kazakh": "жұмсақ",
+      "russian": "мягкий",
+      "topics": []
+    },
+    {
+      "kazakh": "алма",
+      "russian": "яблоко",
+      "topics": []
+    },
+    {
+      "kazakh": "жауап",
+      "russian": "ответ",
+      "topics": []
+    },
+    {
+      "kazakh": "дәптер",
+      "russian": "тетрадь",
+      "topics": []
+    },
+    {
+      "kazakh": "заңгер",
+      "russian": "юрист",
+      "topics": []
+    },
+    {
+      "kazakh": "оқушы",
+      "russian": "ученик",
+      "topics": []
+    },
+    {
+      "kazakh": "әже",
+      "russian": "бабушка",
+      "topics": []
+    },
+    {
+      "kazakh": "жүргізуші",
+      "russian": "водитель",
+      "topics": []
+    },
+    {
+      "kazakh": "танымал",
+      "russian": "популярный / известный",
+      "topics": []
+    },
+    {
+      "kazakh": "ескі",
+      "russian": "старый (к предметам)",
+      "topics": []
+    },
+    {
+      "kazakh": "өрт",
+      "russian": "огонь / пожар",
+      "topics": []
+    },
+    {
+      "kazakh": "сөндіру",
+      "russian": "тушить / гасить",
+      "topics": []
+    },
+    {
+      "kazakh": "тіс",
+      "russian": "зуб",
+      "topics": []
+    },
+    {
+      "kazakh": "қыз",
+      "russian": "девушка / девочка / дочь",
+      "topics": []
+    },
+    {
+      "kazakh": "жабық",
+      "russian": "закрытый / закрыто",
+      "topics": []
+    },
+    {
+      "kazakh": "ұл",
+      "russian": "мальчик/сын",
+      "topics": []
+    },
+    {
+      "kazakh": "кеттiк",
+      "russian": "погнали",
+      "topics": []
+    },
+    {
+      "kazakh": "қараша",
+      "russian": "ноябрь",
+      "topics": []
+    },
+    {
+      "kazakh": "жидек",
+      "russian": "ягода",
+      "topics": []
+    },
+    {
+      "kazakh": "әйел",
+      "russian": "женщина / жена",
+      "topics": []
+    },
+    {
+      "kazakh": "көп",
+      "russian": "много",
+      "topics": []
+    },
+    {
+      "kazakh": "әдемі",
+      "russian": "красивый",
+      "topics": []
+    },
+    {
+      "kazakh": "әрине",
+      "russian": "конечно",
+      "topics": []
+    },
+    {
+      "kazakh": "бой",
+      "russian": "рост / телосложение",
+      "topics": []
+    },
+    {
+      "kazakh": "мамандық",
+      "russian": "профессия / специальность",
+      "topics": []
+    },
+    {
+      "kazakh": "жұмыс күні",
+      "russian": "рабочий день",
+      "topics": []
+    },
+    {
+      "kazakh": "уақыт",
+      "russian": "время",
+      "topics": []
+    },
+    {
+      "kazakh": "сыйлық",
+      "russian": "подарок",
+      "topics": []
+    },
+    {
+      "kazakh": "ағаш",
+      "russian": "дерево",
+      "topics": []
+    },
+    {
+      "kazakh": "өтеде",
+      "russian": "идёт",
+      "topics": []
+    },
+    {
+      "kazakh": "дыбыс",
+      "russian": "звук",
+      "topics": []
+    },
+    {
+      "kazakh": "үстел",
+      "russian": "стол",
+      "topics": []
+    },
+    {
+      "kazakh": "атақты",
+      "russian": "знаменитый / известный",
+      "topics": []
+    },
+    {
+      "kazakh": "полиция қызметкері",
+      "russian": "сотрудник полиции",
+      "topics": []
+    },
+    {
+      "kazakh": "ақша",
+      "russian": "деньги",
+      "topics": []
+    },
+    {
+      "kazakh": "дүрыс",
+      "russian": "правильный",
+      "topics": []
+    },
+    {
+      "kazakh": "жүргізу",
+      "russian": "водить / управлять",
+      "topics": []
+    },
+    {
+      "kazakh": "қағаз",
+      "russian": "бумага",
+      "topics": []
+    },
+    {
+      "kazakh": "маман",
+      "russian": "специалист / профессионал",
+      "topics": []
+    },
+    {
+      "kazakh": "мейрімді",
+      "russian": "добрый",
+      "topics": []
+    },
+    {
+      "kazakh": "банан",
+      "russian": "банан",
+      "topics": []
+    },
+    {
+      "kazakh": "дәмді",
+      "russian": "вкусный",
+      "topics": []
+    },
+    {
+      "kazakh": "медбике",
+      "russian": "медсестра",
+      "topics": []
+    },
+    {
+      "kazakh": "кішкентай",
+      "russian": "маленький",
+      "topics": []
+    },
+    {
+      "kazakh": "әнші",
+      "russian": "певец / певица",
+      "topics": []
+    },
+    {
+      "kazakh": "түсінікті",
+      "russian": "понятно",
+      "topics": []
+    },
+    {
+      "kazakh": "орман",
+      "russian": "лес",
+      "topics": []
+    },
+    {
+      "kazakh": "соңғы",
+      "russian": "последний",
+      "topics": []
+    },
+    {
+      "kazakh": "жаман",
+      "russian": "плохо",
+      "topics": []
+    },
+    {
+      "kazakh": "мұғалім",
+      "russian": "учитель",
+      "topics": []
+    },
+    {
+      "kazakh": "көлік",
+      "russian": "транспорт",
+      "topics": []
+    },
+    {
+      "kazakh": "бағдаршам",
+      "russian": "светофор",
+      "topics": []
+    },
+    {
+      "kazakh": "ұшқыш",
+      "russian": "пилот",
+      "topics": []
+    },
+    {
+      "kazakh": "өте",
+      "russian": "очень",
+      "topics": []
+    },
+    {
+      "kazakh": "басқарушы",
+      "russian": "руководитель / управляющий",
+      "topics": []
+    },
+    {
+      "kazakh": "сөмке",
+      "russian": "сумка",
+      "topics": []
+    },
+    {
+      "kazakh": "қайшы",
+      "russian": "ножницы",
+      "topics": []
+    },
+    {
+      "kazakh": "алтын",
+      "russian": "золотой / золото",
+      "topics": []
+    },
+    {
+      "kazakh": "бай",
+      "russian": "богатый, богач",
+      "topics": []
+    },
+    {
+      "kazakh": "сұрақ",
+      "russian": "вопрос",
+      "topics": []
+    },
+    {
+      "kazakh": "балапан",
+      "russian": "цыплёнок",
+      "topics": []
+    },
+    {
+      "kazakh": "күрделі / қиын",
+      "russian": "сложный / трудный",
+      "topics": []
+    },
+    {
+      "kazakh": "саңырауқұлақ",
+      "russian": "гриб",
+      "topics": []
+    },
+    {
+      "kazakh": "ауа-райы",
+      "russian": "погода",
+      "topics": []
+    },
+    {
+      "kazakh": "зейнеткер",
+      "russian": "пенсионер",
+      "topics": []
+    },
+    {
+      "kazakh": "бүгін",
+      "russian": "сегодня",
+      "topics": []
+    },
+    {
+      "kazakh": "шаштараз",
+      "russian": "парикмахер",
+      "topics": []
+    },
+    {
+      "kazakh": "ел",
+      "russian": "страна",
+      "topics": []
+    },
+    {
+      "kazakh": "жәңадан келген адам",
+      "russian": "новоприбывший человек",
+      "topics": []
+    },
+    {
+      "kazakh": "асығыс",
+      "russian": "торопимся",
+      "topics": []
+    },
+    {
+      "kazakh": "дос",
+      "russian": "друг",
+      "topics": []
+    },
+    {
+      "kazakh": "сатушы",
+      "russian": "продавец",
+      "topics": []
+    },
+    {
+      "kazakh": "өрт сөндіруші",
+      "russian": "пожарный",
+      "topics": []
+    },
+    {
+      "kazakh": "ешкі",
+      "russian": "коза",
+      "topics": []
+    },
+    {
+      "kazakh": "заң",
+      "russian": "закон",
+      "topics": []
+    },
+    {
+      "kazakh": "біздің",
+      "russian": "наши",
+      "topics": []
+    },
+    {
+      "kazakh": "актриса",
+      "russian": "актриса",
+      "topics": []
+    },
+    {
+      "kazakh": "тапсырма",
+      "russian": "задание",
+      "topics": []
+    },
+    {
+      "kazakh": "актер",
+      "russian": "актёр",
+      "topics": []
+    },
+    {
+      "kazakh": "ата",
+      "russian": "дедушка",
+      "topics": []
+    },
+    {
+      "kazakh": "қызмет",
+      "russian": "служба / услуга",
+      "topics": []
+    },
+    {
+      "kazakh": "арзан",
+      "russian": "дешевый",
+      "topics": []
+    },
+    {
+      "kazakh": "қонақ",
+      "russian": "гость",
+      "topics": []
+    },
+    {
+      "kazakh": "оқу",
+      "russian": "учить",
+      "topics": []
+    },
+    {
+      "kazakh": "кітап",
+      "russian": "книга",
+      "topics": []
+    },
+    {
+      "kazakh": "жақын",
+      "russian": "близкие",
+      "topics": []
+    },
+    {
+      "kazakh": "және",
+      "russian": "и",
+      "topics": []
+    },
+    {
+      "kazakh": "жас",
+      "russian": "молодой, возраст, слезы",
+      "topics": []
+    },
+    {
+      "kazakh": "бастық",
+      "russian": "начальник",
+      "topics": []
+    },
+    {
+      "kazakh": "суык",
+      "russian": "холодно",
+      "topics": []
+    },
+    {
+      "kazakh": "тау",
+      "russian": "гора",
+      "topics": []
+    },
+    {
+      "kazakh": "демалыс",
+      "russian": "выходной",
+      "topics": []
+    },
+    {
+      "kazakh": "ертең",
+      "russian": "завтра",
+      "topics": []
+    }
+  ]
+}
