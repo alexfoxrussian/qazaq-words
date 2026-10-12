@@ -1,0 +1,7 @@
+.panel { margin-top: 20px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); color: var(--text-muted); font-size: calc(12px + var(--font-offset)); }
+.panel p { margin: 0 0 12px; }
+.panel p:last-child { margin-bottom: 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.actions + p { margin-top: 12px; }
+@media (max-width: 639px) { .actions { flex-direction: column; } .actions button { width: 100%; } }
