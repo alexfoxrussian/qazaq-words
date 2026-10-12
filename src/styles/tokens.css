@@ -1,0 +1,83 @@
+:root {
+  font-family: 'Noto Sans', sans-serif;
+  color-scheme: light;
+  --bg: #f4f6fa; --surface: #fff; --surface-muted: #eef2f7;
+  --text: #172033; --text-muted: #526078; --border: #8996ab;
+  --accent: #1d4ed8; --accent-hover: #1e40af; --on-accent: #fff;
+  --selected: #e8efff; --focus: #1d4ed8;
+  --success: #166534; --error: #b91c1c; --on-error: #fff;
+  --radius-card: 20px; --radius-control: 12px; --space-unit: 4px;
+  --shadow-card: 0 6px 24px rgb(23 32 51 / 4%);
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #101622; --surface: #192232; --surface-muted: #232f43;
+  --text: #edf2fa; --text-muted: #b3bfd2; --border: #65748c;
+  --accent: #a7c4ff; --accent-hover: #c5d8ff; --on-accent: #101c38;
+  --selected: #253756; --focus: #a7c4ff; --success: #86efac; --error: #fca5a5;
+  --on-error: #381010;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) {
+  color-scheme: dark;
+  --bg: #101622; --surface: #192232; --surface-muted: #232f43;
+  --text: #edf2fa; --text-muted: #b3bfd2; --border: #65748c;
+  --accent: #a7c4ff; --accent-hover: #c5d8ff; --on-accent: #101c38;
+  --selected: #253756; --focus: #a7c4ff; --success: #86efac; --error: #fca5a5;
+  --on-error: #381010;
+} }
+
+:root[data-palette="emerald"] { --accent: #047857; --accent-hover: #065f46; --selected: #d1fae5; --focus: #047857; }
+:root[data-palette="amber"] { --accent: #92400e; --accent-hover: #78350f; --selected: #fef3c7; --focus: #92400e; }
+:root[data-palette="violet"] { --accent: #6d28d9; --accent-hover: #5b21b6; --selected: #ede9fe; --focus: #6d28d9; }
+:root[data-theme="dark"][data-palette="emerald"] { --accent: #6ee7b7; --accent-hover: #a7f3d0; --selected: #163d35; --focus: #6ee7b7; }
+:root[data-theme="dark"][data-palette="amber"] { --accent: #fcd34d; --accent-hover: #fde68a; --selected: #493716; --focus: #fcd34d; }
+:root[data-theme="dark"][data-palette="violet"] { --accent: #c4b5fd; --accent-hover: #ddd6fe; --selected: #382b59; --focus: #c4b5fd; }
+
+:root { --font-offset: 0px; }
+:root[data-font-size="large"] { --font-offset: 2px; }
+:root[data-font-size="maximum"] { --font-offset: 4px; }
+
+:root[data-style] {
+  --radius-card: 24px; --radius-control: 14px;
+  --card-border: color-mix(in srgb, var(--border) 35%, var(--surface));
+  --shadow-card: 0 8px 30px color-mix(in srgb, var(--text) 5%, transparent);
+}
+:root[data-style] body {
+  background: radial-gradient(ellipse at 90% 0%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 55%), var(--bg);
+}
+
+:root { --radius-chip: 999px; --heading-font: 'Noto Sans', sans-serif; }
+:root[data-style="retro"] {
+  --bg: #eee7d9; --surface: #fffaf0; --surface-muted: #f1e9d8;
+  --text: #302b25; --text-muted: #63594b; --border: #8b7a61;
+  --card-border: #9b896f; --radius-card: 8px; --radius-control: 5px; --radius-chip: 5px;
+  --heading-font: Georgia, 'Noto Sans', serif;
+  --shadow-card: 5px 5px 0 color-mix(in srgb, var(--text) 18%, transparent);
+}
+:root[data-theme="dark"][data-style="retro"] {
+  --bg: #201e1a; --surface: #2d2923; --surface-muted: #383229;
+  --text: #f7efdf; --text-muted: #c7bca8; --border: #93836a; --card-border: #93836a;
+}
+:root[data-style="retro"] body {
+  background: repeating-linear-gradient(0deg, transparent 0 3px, color-mix(in srgb, var(--text) 2%, transparent) 3px 4px), var(--bg);
+}
+:root[data-style="pixel"] {
+  --radius-card: 0px; --radius-control: 0px; --radius-chip: 0px;
+  --card-border: color-mix(in srgb, var(--accent) 45%, var(--surface));
+  --heading-font: Consolas, 'Courier New', monospace;
+  --shadow-card: 6px 6px 0 color-mix(in srgb, var(--accent) 20%, var(--bg));
+}
+:root[data-style="pixel"] body {
+  background: linear-gradient(color-mix(in srgb, var(--accent) 7%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--accent) 7%, transparent) 1px, transparent 1px), var(--bg);
+  background-size: 24px 24px;
+}
+:root[data-style="orient"] {
+  --radius-card: 28px 8px 28px 8px; --radius-control: 14px 4px 14px 4px; --radius-chip: 14px 4px;
+  --card-border: color-mix(in srgb, var(--accent) 40%, var(--surface));
+  --heading-font: Georgia, 'Noto Sans', serif;
+  --shadow-card: 0 0 0 3px var(--bg), 0 0 0 4px color-mix(in srgb, var(--accent) 20%, var(--bg)), 0 12px 26px color-mix(in srgb, var(--text) 6%, transparent);
+}
+:root[data-style="orient"] body {
+  background: repeating-linear-gradient(45deg, transparent 0 39px, color-mix(in srgb, var(--accent) 4%, transparent) 39px 40px), repeating-linear-gradient(-45deg, transparent 0 39px, color-mix(in srgb, var(--accent) 4%, transparent) 39px 40px), var(--bg);
+}
+:root[data-style] h1, :root[data-style] h2, :root[data-style] h3 { font-family: var(--heading-font); }
