@@ -47,7 +47,7 @@ export function validateBackup(value: unknown): Backup {
   for (const item of data.settings) {
     owner(item.profileId)
     if (record(item).visualStyle === 'modern-new') item.visualStyle = 'modern'
-    if (!['light', 'dark', 'system'].includes(item.colorMode) || !['blue', 'emerald', 'amber', 'violet'].includes(item.palette) || !['modern', 'retro', 'pixel', 'orient'].includes(item.visualStyle)) invalid('неверное оформление.')
+    if (!['light', 'dark', 'system'].includes(item.colorMode) || !['blue', 'emerald', 'amber', 'violet', 'gray'].includes(item.palette) || !['modern', 'retro', 'pixel', 'orient'].includes(item.visualStyle)) invalid('неверное оформление.')
     if (item.fontSize === undefined) item.fontSize = 'standard'
     if (!['standard', 'large', 'maximum'].includes(item.fontSize)) invalid('неверный размер шрифта.')
     integer(item.sessionLength)

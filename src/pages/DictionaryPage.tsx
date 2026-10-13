@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react'
-import { Pencil, Trash2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { Topic, Word } from '../entities/models'
 import { wordPage, type WordSort } from '../features/word-management/list'
@@ -39,7 +39,8 @@ export function DictionaryPage() {
     if (!scrollToWords.current) return
     scrollToWords.current = false
     wordList.current?.focus({ preventScroll: true })
-    wordList.current?.scrollIntoView({ block: 'start', behavior: 'instant' })
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    wordList.current?.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'instant' : 'smooth' })
   }, [page, pageSize])
 
   function changePage(nextPage: number) {
@@ -152,7 +153,7 @@ export function DictionaryPage() {
           <div className={styles.pagination}>
             <p className={styles.muted} role="status">{pagination.start}–{pagination.end} из {pagination.total} слов</p>
             <label className={styles.selectField}>На странице<select value={pageSize} onChange={(event) => { scrollToWords.current = true; setPageSize(Number(event.target.value)) }}>{[10, 20, 50].map((size) => <option key={size} value={size}>{size}</option>)}</select></label>
-            <nav className={styles.pageNavigation} aria-label="Страницы словаря"><Button variant="secondary" disabled={pagination.page === 1} onClick={() => changePage(pagination.page - 1)}>Назад</Button><span>Страница {pagination.page} из {pagination.pages}</span><Button variant="secondary" disabled={pagination.page === pagination.pages} onClick={() => changePage(pagination.page + 1)}>Далее</Button></nav>
+            <nav className={styles.pageNavigation} aria-label="Страницы словаря"><IconButton label="Предыдущая страница" disabled={pagination.page === 1} onClick={() => changePage(pagination.page - 1)}><ChevronLeft size={20} aria-hidden="true" /></IconButton><span>Страница {pagination.page} из {pagination.pages}</span><IconButton label="Следующая страница" disabled={pagination.page === pagination.pages} onClick={() => changePage(pagination.page + 1)}><ChevronRight size={20} aria-hidden="true" /></IconButton></nav>
           </div>
         </BentoCard>
         <BentoCard title="Темы словаря"><p className={styles.muted}>Классификация общих слов для поиска и тренировки.</p>{canEdit && <Button disabled={busy} onClick={() => openTopic()}>Добавить тему</Button>}
