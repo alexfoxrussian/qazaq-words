@@ -3,6 +3,7 @@ import { useProfileStore } from '../features/profiles/store'
 import { profileRepository } from '../shared/db/profileRepository'
 import { dataErrorMessage } from '../shared/db/errors'
 import { BentoCard, Button } from '../shared/ui/components'
+import { DictionarySyncProvider } from '../features/dictionary-sync/DictionarySyncProvider'
 
 export function DataGate({ children }: { children: ReactNode }) {
   const status = useProfileStore((state) => state.status)
@@ -23,5 +24,5 @@ export function DataGate({ children }: { children: ReactNode }) {
   }, [attempt])
   if (status === 'loading') return <BentoCard><p role="status">Загружаем локальные данные…</p></BentoCard>
   if (status === 'error') return <BentoCard title="Хранилище недоступно"><p role="alert">{error}</p><Button onClick={() => setAttempt((value) => value + 1)}>Повторить загрузку</Button></BentoCard>
-  return children
+  return <DictionarySyncProvider>{children}</DictionarySyncProvider>
 }
