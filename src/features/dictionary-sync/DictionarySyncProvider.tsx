@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { DEFAULT_DICTIONARY_URL } from '../../entities/word/dictionaryFeed'
 import { dictionaryFeedRepository } from '../../shared/db/dictionaryFeedRepository'
 import { createDictionarySync, type SyncStatus } from './service'
-import bootstrap from './bootstrap.json'
+import bootstrap from '../../../imports/general-dictionary.json'
 import styles from './sync.module.css'
 
 const useSyncStore = create<SyncStatus>(() => ({ phase: 'idle', message: null }))

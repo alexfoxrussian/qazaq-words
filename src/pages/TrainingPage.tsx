@@ -102,7 +102,7 @@ export function TrainingPage() {
     <header className={styles.heading}><span className={styles.eyebrow}>ПРАКТИКА</span><h1>Тренировка</h1><p>Казахское слово и четыре перевода. Проверка автоматическая.</p></header>
     {!finishOpen && !leaveOpen && error && <p role="alert" className={styles.error}>{error}</p>}
     {view === 'prepare' && <BentoCard className={styles.prepareCard} title="Подготовка тренировки">
-      <label className={styles.selectField}>Тема тренировки<select value={topicId} disabled={busy} onChange={(event) => setTopicId(event.target.value)}><option value="">Все темы</option>{preparation?.topics.map((topic) => <option key={topic.id} value={topic.id}>{topic.name}</option>)}</select></label>
+      <label className={styles.selectField}>Тег тренировки<select value={topicId} disabled={busy} onChange={(event) => setTopicId(event.target.value)}><option value="">Все теги</option>{preparation?.topics.map((topic) => <option key={topic.id} value={topic.id}>{topic.name}</option>)}</select></label>
       <label className={styles.selectField}>Длина сеанса<select value={lengthChoice} disabled={busy} onChange={(event) => {
         if (event.target.value === 'custom') { setCustomProfile(profile.id); setCustomLength(String(savedLength || 10)) }
         else { setCustomProfile(null); void perform(() => setLength( Number(event.target.value))) }
@@ -111,12 +111,12 @@ export function TrainingPage() {
         <FormField id="custom-session-length" label="Количество вопросов" type="number" min={1} step={1} required disabled={busy} value={customValue} onChange={(event) => { setCustomProfile(profile.id); setCustomLength(event.target.value) }} />
         <Button type="submit" variant="secondary" disabled={busy || !unsavedLength}>Сохранить длину</Button>
       </form>}
-      <p className={styles.muted}>Если слов меньше, сеанс будет короче. «Весь словарь» включает все пригодные слова выбранной темы. {activeProfile ? 'Выбор сохраняется для профиля.' : 'Гостевые результаты и настройки не сохраняются.'}</p>
+      <p className={styles.muted}>Если слов меньше, сеанс будет короче. «Весь словарь» включает все пригодные слова выбранного тега. {activeProfile ? 'Выбор сохраняется для профиля.' : 'Гостевые результаты и настройки не сохраняются.'}</p>
       {!preparation && !error && <p role="status">Готовим очередь…</p>}
       {preparation && <>
         <p role="status">Доступно слов: {preparation.eligibleCount - preparation.skippedCount}.</p>
         {!!preparation.skippedCount && <p className={styles.muted}>Пропущено вопросов: {preparation.skippedCount}. Для них нет трёх уникальных неверных переводов. Другие переводы того же казахского слова не используются как неверные варианты.</p>}
-        {!preparation.questions.length && <EmptyState title={preparation.skippedCount ? 'Недостаточно вариантов' : 'Очередь пуста'} action={<Link to="/dictionary">Открыть словарь →</Link>}>{preparation.skippedCount ? 'Для этой тренировки нужны слова хотя бы с четырьмя разными переводами.' : 'В словаре нет подходящих слов. Добавьте слова или смените тему.'}</EmptyState>}
+        {!preparation.questions.length && <EmptyState title={preparation.skippedCount ? 'Недостаточно вариантов' : 'Очередь пуста'} action={<Link to="/dictionary">Открыть словарь →</Link>}>{preparation.skippedCount ? 'Для этой тренировки нужны слова хотя бы с четырьмя разными переводами.' : 'В словаре нет подходящих слов. Добавьте слова или смените тег.'}</EmptyState>}
       </>}
       <div className={styles.actions}><Button disabled={busy || unsavedLength || !preparation?.questions.length} onClick={() => void perform(() => repository.start(profile.id, topicId), () => useTrainingStore.getState().setView('session'))}>Начать тренировку</Button></div>
     </BentoCard>}

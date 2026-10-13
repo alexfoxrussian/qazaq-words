@@ -19,7 +19,7 @@ export function createGuestRepository(dictionary = dictionaryRepository) {
     },
     async prepare(_profileId: string, topicId: string) {
       const { words, topics } = await dictionary.snapshot()
-      if (topicId && !topics.some((topic) => topic.id === topicId)) throw new Error('Выбранная тема удалена.')
+      if (topicId && !topics.some((topic) => topic.id === topicId)) throw new Error('Выбранный тег удалён.')
       return { ...buildQueue(words, [], topicId, length === 0 ? Infinity : length, Date.now(), Math.random), topics }
     },
     observePreparation(profileId: string, topicId: string) { return liveQuery(() => this.prepare(profileId, topicId)) },

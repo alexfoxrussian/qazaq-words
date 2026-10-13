@@ -14,7 +14,7 @@ export function createTrainingRepository(db: QazaqDatabase) {
     }
   }
   async function plan(profileId: string, topicId: string, now: number, random: () => number) {
-    if (topicId && !await db.topics.get(topicId)) throw new ValidationError('Выбранная тема удалена. Выберите другую тему.')
+    if (topicId && !await db.topics.get(topicId)) throw new ValidationError('Выбранный тег удалён. Выберите другой тег.')
     const settings = await db.settings.get(profileId)
     return buildQueue(await db.words.toArray(), await db.progress.where('profileId').equals(profileId).toArray(), topicId, settings?.sessionLength === 0 ? Infinity : settings?.sessionLength ?? 10, now, random)
   }
@@ -48,7 +48,7 @@ export function createTrainingRepository(db: QazaqDatabase) {
         await assertOwner(profileId)
         if (await db.sessions.where('[profileId+status]').equals([profileId, 'active']).count()) throw new ValidationError('Уже есть активная тренировка. Продолжите её или завершите.')
         const queue = await plan(profileId, topicId, now, Math.random)
-        if (!queue.questions.length) throw new ValidationError(queue.skippedCount ? 'Для этой тренировки нужны слова хотя бы с четырьмя разными переводами. Другие переводы того же казахского слова не подходят как неверные варианты.' : 'В словаре нет подходящих слов. Добавьте слова или смените тему.')
+        if (!queue.questions.length) throw new ValidationError(queue.skippedCount ? 'Для этой тренировки нужны слова хотя бы с четырьмя разными переводами. Другие переводы того же казахского слова не подходят как неверные варианты.' : 'В словаре нет подходящих слов. Добавьте слова или смените тег.')
         const session: TrainingSession = { id: createId(), profileId, status: 'active', startedAt: now, targetCount: queue.questions.length, answeredCount: 0, correctCount: 0, queueSnapshots: queue.questions, cursor: 0 }
         await db.sessions.add(session)
         return session

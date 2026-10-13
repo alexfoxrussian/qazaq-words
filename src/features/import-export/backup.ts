@@ -35,13 +35,13 @@ export function validateBackup(value: unknown): Backup {
   }
   for (const item of data.profiles) { base(record(item)); text(item.name, 80); if (item.avatarDataUrl !== undefined) { try { validateAvatar(item.avatarDataUrl) } catch { invalid('некорректное фото профиля.') } } }
   for (const item of data.topics) { base(record(item)); text(item.name, 80) }
-  unique(data.topics.map((item) => normalizeText(item.name)), 'названия тем')
+  unique(data.topics.map((item) => normalizeText(item.name)), 'названия тегов')
   const profiles = new Set(data.profiles.map((item) => item.id)), words = new Set(data.words.map((item) => item.id)), topics = new Set(data.topics.map((item) => item.id))
   const owner = (id: unknown) => { text(id); if (!profiles.has(id)) invalid('ссылка на отсутствующий профиль.') }
   for (const item of data.words) {
     base(record(item)); text(item.kazakh); text(item.russian)
-    array(item.topicIds).forEach((id) => { text(id); if (!topics.has(id)) invalid('ссылка на отсутствующую тему.') })
-    unique(item.topicIds, 'темы слова')
+    array(item.topicIds).forEach((id) => { text(id); if (!topics.has(id)) invalid('ссылка на отсутствующий тег.') })
+    unique(item.topicIds, 'теги слова')
   }
   unique(data.words.map((item) => JSON.stringify([normalizeText(item.kazakh), normalizeText(item.russian)])), 'пары слов и переводов')
   for (const item of data.settings) {

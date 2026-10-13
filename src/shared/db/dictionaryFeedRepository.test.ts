@@ -5,8 +5,8 @@ import { createDictionaryFeedRepository } from './dictionaryFeedRepository'
 import { createProfileRepository } from './profileRepository'
 import { createBackupRepository } from './backupRepository'
 import { validateBackup } from '../../features/import-export/backup'
-import bootstrap from '../../features/dictionary-sync/bootstrap.json'
-import { DEFAULT_DICTIONARY_URL } from '../../entities/word/dictionaryFeed'
+import bootstrap from '../../../imports/general-dictionary.json'
+import { DEFAULT_DICTIONARY_URL, LEGACY_DICTIONARY_URL } from '../../entities/word/dictionaryFeed'
 
 let db: QazaqDatabase
 beforeEach(async () => {
@@ -22,11 +22,31 @@ const apply = (value: unknown = feed) => createDictionaryFeedRepository(db).appl
 
 it('первый гостевой запуск получает настоящий словарь без создания профиля или истории', async () => {
   await apply(bootstrap)
-  expect(await db.words.count()).toBe(118)
-  expect(await db.topics.count()).toBe(8)
+  expect(await db.words.count()).toBe(7703)
+  expect(await db.topics.count()).toBe(23)
   expect(await db.profiles.count()).toBe(0)
   expect(await db.answers.count()).toBe(0)
   expect(await db.progress.count()).toBe(0)
+}, 20000)
+
+it('смена источника сохраняет локальные удаления, снятые теги и прогресс', async () => {
+  const repository = createDictionaryFeedRepository(db)
+  await repository.apply(feed, LEGACY_DICTIONARY_URL)
+  const tree = (await db.words.toArray()).find((word) => word.kazakh === 'ағаш')!
+  const apple = (await db.words.toArray()).find((word) => word.kazakh === 'алма')!
+  const profileId = await createProfileRepository(db).create('Первый')
+  await db.progress.add({ profileId, wordId: tree.id, stage: 3, dueAt: 1000, lastAnsweredAt: 100, correctCount: 3, incorrectCount: 0 })
+  const progress = await db.progress.toArray()
+  await db.words.update(tree.id, { topicIds: [] })
+  await db.words.delete(apple.id)
+  const updated = { ...feed, words: [...feed.words, { kazakh: 'су', russian: 'вода', topics: ['Природа'] }] }
+  await repository.apply(updated, DEFAULT_DICTIONARY_URL, 0, true)
+  expect(await db.words.count()).toBe(2)
+  expect((await db.words.get(tree.id))?.topicIds).toEqual([])
+  expect(await db.words.get(apple.id)).toBeUndefined()
+  expect(await db.progress.toArray()).toEqual(progress)
+  await repository.apply(updated, DEFAULT_DICTIONARY_URL, 0, true)
+  expect(await db.words.count()).toBe(2)
 })
 
 it('одновременные обновления не дублируют слова и сохраняют прогресс обоих профилей', async () => {

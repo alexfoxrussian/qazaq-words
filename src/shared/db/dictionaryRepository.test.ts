@@ -147,7 +147,7 @@ describe('общий словарь и темы', () => {
     const { word, topic } = await seed()
     await expect(repo.saveWord({ ...word, russian: ' ' }, word)).rejects.toThrow('Заполните')
     await expect(repo.saveWord({ ...word, kazakh: 'x'.repeat(201) }, word)).rejects.toThrow('200')
-    await expect(repo.saveWord({ ...word, topicIds: ['missing'] }, word)).rejects.toThrow('тема удалена')
+    await expect(repo.saveWord({ ...word, topicIds: ['missing'] }, word)).rejects.toThrow('тег удалён')
     await expect(repo.saveTopic(' ТЕМА ')).rejects.toThrow('уже существует')
     await repo.saveWord({ ...word, topicIds: [] }, word)
     await expect(repo.saveWord({ ...word, russian: 'Новый' }, word, true)).rejects.toThrow('другой вкладке')

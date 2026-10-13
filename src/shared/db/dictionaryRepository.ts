@@ -51,7 +51,7 @@ export function createDictionaryRepository(db: QazaqDatabase) {
     async importDictionary(value: unknown, confirmed = false) {
       const file = validateDictionaryFile(value)
       return db.transaction('rw', tables, async () => {
-        await checkAndInterrupt(['Импорт дополнит общий словарь. Совпадающие пары слов и переводов сохранят прогресс; их темы будут объединены. Разные переводы одного казахского слова сохранятся как отдельные записи.'], confirmed)
+        await checkAndInterrupt(['Импорт дополнит общий словарь. Совпадающие пары слов и переводов сохранят прогресс; их теги будут объединены. Разные переводы одного казахского слова сохранятся как отдельные записи.'], confirmed)
         const now = Date.now()
         const topics = new Map((await db.topics.toArray()).map((topic) => [normalizeText(topic.name), topic]))
         let addedTopics = 0, addedWords = 0, mergedWords = 0
@@ -83,7 +83,7 @@ export function createDictionaryRepository(db: QazaqDatabase) {
       const topicIds = [...new Set(draft.topicIds)].sort()
       return db.transaction('rw', tables, async () => {
         if (original) assertUnchanged(await db.words.get(original.id), original)
-        for (const id of topicIds) if (!await db.topics.get(id)) throw new ValidationError('Выбранная тема удалена. Откройте форму заново.')
+        for (const id of topicIds) if (!await db.topics.get(id)) throw new ValidationError('Выбранный тег удалён. Откройте форму заново.')
         const otherWords = (await db.words.toArray()).filter((word) => word.id !== original?.id)
         const sameKazakh = otherWords.filter((word) => normalizeText(word.kazakh) === normalizeText(kazakh))
         if (sameKazakh.some((word) => normalizeText(word.russian) === normalizeText(russian))) {
@@ -110,11 +110,11 @@ export function createDictionaryRepository(db: QazaqDatabase) {
       })
     },
     async saveTopic(value: string, original?: Topic, confirmed = false) {
-      const name = requiredText(value, 'Название темы', 80)
+      const name = requiredText(value, 'Название тега', 80)
       return db.transaction('rw', tables, async () => {
         if (original) assertUnchanged(await db.topics.get(original.id), original)
         if ((await db.topics.toArray()).some((topic) => topic.id !== original?.id && normalizeText(topic.name) === normalizeText(name))) {
-          throw new ValidationError('Тема с таким названием уже существует.')
+          throw new ValidationError('Тег с таким названием уже существует.')
         }
         await checkAndInterrupt([], confirmed)
         const now = Date.now()
@@ -126,7 +126,7 @@ export function createDictionaryRepository(db: QazaqDatabase) {
     async removeTopic(original: Topic, confirmed = false) {
       await db.transaction('rw', tables, async () => {
         assertUnchanged(await db.topics.get(original.id), original)
-        await checkAndInterrupt(['Тема будет снята со всех слов и удалена. Слова, прогресс и история сохранятся.'], confirmed)
+        await checkAndInterrupt(['Тег будет снят со всех слов и удалён. Слова, прогресс и история сохранятся.'], confirmed)
         const words = await db.words.where('topicIds').equals(original.id).toArray()
         for (const word of words) await db.words.update(word.id, { topicIds: word.topicIds.filter((id) => id !== original.id), updatedAt: Date.now() })
         await db.topics.delete(original.id)
