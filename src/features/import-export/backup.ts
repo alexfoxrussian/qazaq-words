@@ -3,6 +3,7 @@ import { validateAvatar } from '../../entities/profile/photo'
 import { evaluateAnswer } from '../../entities/training/domain'
 import { normalizeText } from '../../shared/utils/text'
 import { ValidationError } from '../../shared/db/errors'
+import { validateFeedState } from '../../entities/word/dictionaryFeed'
 export interface BackupData { profiles: Profile[]; words: Word[]; topics: Topic[]; progress: Progress[]; sessions: TrainingSession[]; answers: Answer[]; settings: ProfileSettings[]; appMeta: AppMeta[] }
 export interface Backup { format: 'qazaq-words-backup'; schemaVersion: 1; exportedAt: string; data: BackupData }
 export const MAX_BACKUP_BYTES = 25 * 1024 * 1024
@@ -46,7 +47,7 @@ export function validateBackup(value: unknown): Backup {
   for (const item of data.settings) {
     owner(item.profileId)
     if (record(item).visualStyle === 'modern-new') item.visualStyle = 'modern'
-    if (!['light', 'dark', 'system'].includes(item.colorMode) || !['blue', 'emerald', 'amber', 'violet'].includes(item.palette) || !['modern', 'retro', 'pixel', 'orient'].includes(item.visualStyle)) invalid('неверное оформление.')
+    if (!['light', 'dark', 'system'].includes(item.colorMode) || !['blue', 'emerald', 'amber', 'violet', 'gray'].includes(item.palette) || !['modern', 'retro', 'pixel', 'orient'].includes(item.visualStyle)) invalid('неверное оформление.')
     if (item.fontSize === undefined) item.fontSize = 'standard'
     if (!['standard', 'large', 'maximum'].includes(item.fontSize)) invalid('неверный размер шрифта.')
     integer(item.sessionLength)
@@ -88,7 +89,9 @@ export function validateBackup(value: unknown): Backup {
     if (answers.length !== session.answeredCount || answers.filter((a) => a.isCorrect).length !== session.correctCount || answers.some((a, index) => a.questionIndex !== index || (index > 0 && a.answeredAt < answers[index - 1].answeredAt))) invalid('ответы не соответствуют счётчикам или порядку сеанса.')
   }
   unique(data.appMeta.map((item) => item.key), 'ключи метаданных')
-  if (data.appMeta.length !== 2 || !data.appMeta.some((item) => item.key === 'initialized' && item.value === true)) invalid('неверные метаданные.')
+  if ((data.appMeta.length !== 2 && data.appMeta.length !== 3) || data.appMeta.some((item) => !['activeProfileId', 'initialized', 'dictionaryFeed'].includes(item.key)) || !data.appMeta.some((item) => item.key === 'initialized' && item.value === true)) invalid('неверные метаданные.')
+  const feed = data.appMeta.find((item) => item.key === 'dictionaryFeed')
+  if (feed) { try { validateFeedState(feed.value) } catch { invalid('неверные метаданные общего словаря.') } }
   const active = data.appMeta.find((item) => item.key === 'activeProfileId')
   if (!active || (active.value !== null && (typeof active.value !== 'string' || !profiles.has(active.value)))) invalid('неверный активный профиль.')
   if (data.sessions.some((session) => session.status === 'active' && session.profileId !== active.value)) invalid('активный сеанс принадлежит другому профилю.')

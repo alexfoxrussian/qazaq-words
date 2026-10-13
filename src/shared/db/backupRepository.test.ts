@@ -114,7 +114,7 @@ it('backup переносит фото профиля и отклоняет вн
 it('старый Modern New из backup становится Modern без изменения исходного файла', async () => {
   const profiles = createProfileRepository(db), settings = createSettingsRepository(db)
   const owner = (await profiles.snapshot()).activeProfile!.id
-  await settings.save(owner, { colorMode: 'dark', palette: 'violet', visualStyle: 'modern' })
+  await settings.save(owner, { colorMode: 'dark', palette: 'gray', visualStyle: 'modern' })
   const backup = await repo.export()
   await settings.save(owner, { colorMode: 'light', palette: 'blue', visualStyle: 'modern' })
   expect((await profiles.snapshot()).settings?.visualStyle).toBe('modern')
@@ -125,5 +125,6 @@ it('старый Modern New из backup становится Modern без из�
   expect(legacySettings.visualStyle).toBe('modern-new')
   expect((await profiles.snapshot()).settings?.visualStyle).toBe('modern')
   expect((await db.settings.toArray()).find((item) => item.profileId !== owner)?.visualStyle).toBe('modern')
+  expect((await profiles.snapshot()).settings?.palette).toBe('gray')
   expect((await repo.export()).data.answers).toEqual(backup.data.answers)
 })

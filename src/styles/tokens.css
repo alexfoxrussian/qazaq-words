@@ -81,3 +81,17 @@
   background: repeating-linear-gradient(45deg, transparent 0 39px, color-mix(in srgb, var(--accent) 4%, transparent) 39px 40px), repeating-linear-gradient(-45deg, transparent 0 39px, color-mix(in srgb, var(--accent) 4%, transparent) 39px 40px), var(--bg);
 }
 :root[data-style] h1, :root[data-style] h2, :root[data-style] h3 { font-family: var(--heading-font); }
+
+:root[data-palette="gray"] {
+  --bg: #f4f4f5; --surface: #fff; --surface-muted: #eaeaed;
+  --text: #242427; --text-muted: #59595f; --border: #88888f;
+  --accent: #52525b; --accent-hover: #3f3f46; --on-accent: #fff;
+  --selected: #e4e4e7; --focus: #52525b;
+  --card-border: color-mix(in srgb, var(--border) 45%, var(--surface));
+}
+:root[data-theme="dark"][data-palette="gray"] {
+  --bg: #18181b; --surface: #242427; --surface-muted: #303034;
+  --text: #f4f4f5; --text-muted: #bdbdc4; --border: #777780;
+  --accent: #d4d4d8; --accent-hover: #e4e4e7; --on-accent: #242427;
+  --selected: #3f3f46; --focus: #d4d4d8;
+}

@@ -1,3 +1,4 @@
+import { createId } from '../../shared/utils/id'
 import { liveQuery } from 'dexie'
 import type { Answer, TrainingSession } from '../../entities/models'
 import { buildQueue, evaluateAnswer } from '../../entities/training/domain'
@@ -28,7 +29,7 @@ export function createGuestRepository(dictionary = dictionaryRepository) {
       const queue = await this.prepare(profileId, topicId)
       if (!queue.questions.length) throw new Error('Для тренировки нужны слова хотя бы с четырьмя разными переводами.')
       answers = []
-      session = { id: crypto.randomUUID(), profileId, status: 'active', startedAt: Date.now(), targetCount: queue.questions.length, answeredCount: 0, correctCount: 0, queueSnapshots: queue.questions, cursor: 0 }
+      session = { id: createId(), profileId, status: 'active', startedAt: Date.now(), targetCount: queue.questions.length, answeredCount: 0, correctCount: 0, queueSnapshots: queue.questions, cursor: 0 }
       return structuredClone(session)
     },
     async answer(profileId: string, sessionId: string, questionIndex: number, selectedIndex: number) {
@@ -39,7 +40,7 @@ export function createGuestRepository(dictionary = dictionaryRepository) {
       const question = session.queueSnapshots[questionIndex]
       if (!question) throw new Error('Вопрос не найден.')
       const isCorrect = evaluateAnswer(question, selectedIndex)
-      const answer: Answer = { id: crypto.randomUUID(), profileId, sessionId, wordId: question.wordId, questionIndex, kazakhSnapshot: question.kazakh, russianSnapshot: question.russian, optionsSnapshot: [...question.options], selectedIndex, correctIndex: question.correctIndex, isCorrect, answeredAt: Date.now() }
+      const answer: Answer = { id: createId(), profileId, sessionId, wordId: question.wordId, questionIndex, kazakhSnapshot: question.kazakh, russianSnapshot: question.russian, optionsSnapshot: [...question.options], selectedIndex, correctIndex: question.correctIndex, isCorrect, answeredAt: Date.now() }
       answers.push(answer)
       session.cursor++; session.answeredCount++; session.correctCount += Number(isCorrect)
       if (session.cursor === session.targetCount) { session.status = 'completed'; session.endedAt = Date.now() }

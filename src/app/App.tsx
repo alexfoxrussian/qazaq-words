@@ -11,6 +11,7 @@ import { DataGate } from './DataGate'
 import { useProfileStore } from '../features/profiles/store'
 import { BentoCard, EmptyState } from '../shared/ui/components'
 import styles from './shell.module.css'
+import { PwaControls } from '../features/pwa/PwaControls'
 
 const navigation: { path: string; label: string; icon: LucideIcon }[] = [
   { path: '/', label: 'Главная', icon: House },
@@ -37,6 +38,7 @@ function Shell() {
 
       <DataGate><AppearanceProvider /><TrainingProvider><Outlet /></TrainingProvider></DataGate>
       <footer className={styles.footer}>Qazaq Words · Локальное обучение</footer>
+      <PwaControls />
     </main>
   </div>
 }
@@ -56,6 +58,6 @@ const router = createBrowserRouter(createRoutesFromElements(<Route element={<She
     </Route>
     <Route path="profile" element={<ProfilePage />} />
     <Route path="*" element={<BentoCard><EmptyState title="Страница не найдена" action={<Link to="/">На главную</Link>}>Проверьте адрес или вернитесь на главную.</EmptyState></BentoCard>} />
-  </Route>))
+  </Route>), { basename: import.meta.env.BASE_URL })
 
 export function App() { return <RouterProvider router={router} /> }

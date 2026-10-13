@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Pencil, Trash2 } from 'lucide-react'
+import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react'
+import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { Topic, Word } from '../entities/models'
 import { wordPage, type WordSort } from '../features/word-management/list'
@@ -30,8 +30,23 @@ export function DictionaryPage() {
   const [busy, setBusy] = useState(false)
   const lock = useRef(false)
   const fileInput = useRef<HTMLInputElement>(null)
+  const wordList = useRef<HTMLDivElement>(null)
+  const scrollToWords = useRef(false)
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState('')
+
+  useLayoutEffect(() => {
+    if (!scrollToWords.current) return
+    scrollToWords.current = false
+    wordList.current?.focus({ preventScroll: true })
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    wordList.current?.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'instant' : 'smooth' })
+  }, [page, pageSize])
+
+  function changePage(nextPage: number) {
+    scrollToWords.current = true
+    setPage(nextPage)
+  }
 
   useEffect(() => {
     setLoadError(null)
@@ -127,7 +142,7 @@ export function DictionaryPage() {
           <div className={styles.actions}>{canEdit && <><Button disabled={busy} onClick={() => openWord()}>Добавить слово</Button><Button variant="secondary" disabled={busy} onClick={() => void exportDictionary()}>Экспортировать словарь</Button><Button variant="secondary" disabled={busy} onClick={() => fileInput.current?.click()}>Импортировать словарь</Button></>}{(search || topicId) && <Button variant="secondary" onClick={() => { setSearch(''); setTopicId('') }}>Сбросить фильтры</Button>}</div>
           <input ref={fileInput} type="file" accept=".json,application/json" hidden onChange={(event) => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void readImport(file) }} />
           {canEdit && <p className={styles.muted}>Импорт и экспорт JSON включают все слова и темы, независимо от фильтров и страницы. Импорт дополняет словарь и сохраняет прогресс. Файл до 25 MiB.</p>}
-          {words.length === 0 ? <EmptyState title={snapshot.words.length ? 'Совпадений нет' : 'Словарь пока пуст'}>{snapshot.words.length ? 'Измените запрос или выберите другую тему.' : 'Добавьте своё первое слово и один русский перевод. Словарь общий для всех профилей.'}</EmptyState> : <div className={styles.wordList}>
+          {words.length === 0 ? <EmptyState title={snapshot.words.length ? 'Совпадений нет' : 'Словарь пока пуст'}>{snapshot.words.length ? 'Измените запрос или выберите другую тему.' : 'Добавьте своё первое слово и один русский перевод. Словарь общий для всех профилей.'}</EmptyState> : <div ref={wordList} className={styles.wordList} role="region" aria-label="Список слов" tabIndex={-1}>
             <div className={`${styles.newOnly} ${styles.wordColumns}`} aria-hidden="true"><span>Қазақша</span><span>Русский перевод</span><span>Действия</span></div>
             {pagination.words.map((word) => <article key={word.id} className={styles.wordRow}>
               <h3>{word.kazakh}</h3><p>{word.russian}</p>
@@ -137,8 +152,8 @@ export function DictionaryPage() {
           </div>}
           <div className={styles.pagination}>
             <p className={styles.muted} role="status">{pagination.start}–{pagination.end} из {pagination.total} слов</p>
-            <label className={styles.selectField}>На странице<select value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))}>{[10, 20, 50].map((size) => <option key={size} value={size}>{size}</option>)}</select></label>
-            <nav className={styles.pageNavigation} aria-label="Страницы словаря"><Button variant="secondary" disabled={pagination.page === 1} onClick={() => setPage(pagination.page - 1)}>Назад</Button><span>Страница {pagination.page} из {pagination.pages}</span><Button variant="secondary" disabled={pagination.page === pagination.pages} onClick={() => setPage(pagination.page + 1)}>Далее</Button></nav>
+            <label className={styles.selectField}>На странице<select value={pageSize} onChange={(event) => { scrollToWords.current = true; setPageSize(Number(event.target.value)) }}>{[10, 20, 50].map((size) => <option key={size} value={size}>{size}</option>)}</select></label>
+            <nav className={styles.pageNavigation} aria-label="Страницы словаря"><IconButton label="Предыдущая страница" disabled={pagination.page === 1} onClick={() => changePage(pagination.page - 1)}><ChevronLeft size={20} aria-hidden="true" /></IconButton><span>Страница {pagination.page} из {pagination.pages}</span><IconButton label="Следующая страница" disabled={pagination.page === pagination.pages} onClick={() => changePage(pagination.page + 1)}><ChevronRight size={20} aria-hidden="true" /></IconButton></nav>
           </div>
         </BentoCard>
         <BentoCard title="Темы словаря"><p className={styles.muted}>Классификация общих слов для поиска и тренировки.</p>{canEdit && <Button disabled={busy} onClick={() => openTopic()}>Добавить тему</Button>}
