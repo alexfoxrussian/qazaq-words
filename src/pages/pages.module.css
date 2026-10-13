@@ -232,8 +232,8 @@
   .pagination { display: grid; grid-template-columns: minmax(0, 1fr); }
   .pagination .selectField { justify-content: space-between; }
   .pagination select { flex-shrink: 0; width: 88px; }
-  .pageNavigation { width: 100%; justify-content: space-between; gap: 8px; }
-  .pageNavigation span { order: -1; width: 100%; text-align: center; font-variant-numeric: tabular-nums; }
+  .pageNavigation { width: 100%; display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 8px; }
+  .pageNavigation span { text-align: center; font-variant-numeric: tabular-nums; }
 }
 
 .homeIdentity { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-top: 24px; }
