@@ -5,6 +5,7 @@ interface InstallPrompt extends Event {
   prompt: () => Promise<{ outcome: 'accepted' | 'dismissed' }>
 }
 interface PwaState {
+  supported: boolean
   ready: boolean
   update: boolean
   online: boolean
@@ -12,11 +13,16 @@ interface PwaState {
   canInstall: boolean
   error: string | null
 }
+const supported = window.isSecureContext && 'serviceWorker' in navigator
 let state: PwaState = {
+  supported,
   ready: false, update: false, online: navigator.onLine,
   installed: window.matchMedia('(display-mode: standalone)').matches ||
     Boolean((navigator as Navigator & { standalone?: boolean }).standalone),
-  canInstall: false, error: null,
+  canInstall: false,
+  error: !window.isSecureContext
+    ? 'Для установки и работы офлайн откройте приложение по HTTPS. По локальному HTTP-адресу доступна работа в браузере.'
+    : !supported ? 'Этот браузер не поддерживает офлайн-режим. Откройте приложение в актуальном Chrome, Edge или Safari.' : null,
 }
 const listeners = new Set<() => void>()
 let installPrompt: InstallPrompt | null = null
@@ -55,7 +61,7 @@ export const pwaRuntime = {
     }
   },
 }
-const updateServiceWorker = import.meta.env.PROD ? registerSW({
+const updateServiceWorker = import.meta.env.PROD && supported ? registerSW({
   immediate: true,
   onOfflineReady: () => publish({ ready: true }),
   onNeedRefresh: () => publish({ update: true }),

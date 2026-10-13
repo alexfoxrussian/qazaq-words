@@ -14,15 +14,29 @@ beforeEach(() => {
   mocks.active = false
   mocks.register.mockReturnValue(mocks.update)
   vi.stubEnv('PROD', true)
-  vi.stubGlobal('navigator', { onLine: true })
+  vi.stubGlobal('navigator', { onLine: true, serviceWorker: {} })
   vi.stubGlobal('window', {
-    matchMedia: () => ({ matches: false }), addEventListener: vi.fn(),
+    isSecureContext: true, matchMedia: () => ({ matches: false }), addEventListener: vi.fn(),
     location: { reload: mocks.reload },
   })
 })
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs() })
 
 describe('PWA lifecycle', () => {
+  it('explains HTTP access from a phone without starting offline preparation', async () => {
+    vi.stubGlobal('window', { isSecureContext: false, matchMedia: () => ({ matches: false }), addEventListener: vi.fn() })
+    vi.stubGlobal('navigator', { onLine: true })
+    const { pwaRuntime } = await import('./runtime')
+    expect(mocks.register).not.toHaveBeenCalled()
+    expect(pwaRuntime.snapshot().supported).toBe(false)
+    expect(pwaRuntime.snapshot().error).toContain('HTTPS')
+  })
+  it('handles a secure browser without service worker support', async () => {
+    vi.stubGlobal('navigator', { onLine: true })
+    const { pwaRuntime } = await import('./runtime')
+    expect(mocks.register).not.toHaveBeenCalled()
+    expect(pwaRuntime.snapshot().error).toContain('не поддерживает')
+  })
   it('reloads once an approved update takes control', async () => {
     const { pwaRuntime } = await import('./runtime')
     const callbacks = mocks.register.mock.calls[0][0]

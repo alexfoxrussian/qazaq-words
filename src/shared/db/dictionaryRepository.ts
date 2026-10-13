@@ -1,3 +1,4 @@
+import { createId } from '../utils/id'
 import { liveQuery } from 'dexie'
 import type { Topic, Word } from '../../entities/models'
 import { cleanText, normalizeText } from '../utils/text'
@@ -57,7 +58,7 @@ export function createDictionaryRepository(db: QazaqDatabase) {
         for (const name of file.topics) {
           const key = normalizeText(name)
           if (topics.has(key)) continue
-          const topic: Topic = { id: crypto.randomUUID(), name, createdAt: now, updatedAt: now }
+          const topic: Topic = { id: createId(), name, createdAt: now, updatedAt: now }
           await db.topics.add(topic); topics.set(key, topic); addedTopics++
         }
         const pairKey = (kazakh: string, russian: string) => JSON.stringify([normalizeText(kazakh), normalizeText(russian)])
@@ -70,7 +71,7 @@ export function createDictionaryRepository(db: QazaqDatabase) {
             if (JSON.stringify([...existing.topicIds].sort()) !== JSON.stringify(merged)) await db.words.update(existing.id, { topicIds: merged, updatedAt: now })
             mergedWords++
           } else {
-            await db.words.add({ id: crypto.randomUUID(), kazakh: item.kazakh, russian: item.russian, topicIds: topicIds.sort(), createdAt: now, updatedAt: now }); addedWords++
+            await db.words.add({ id: createId(), kazakh: item.kazakh, russian: item.russian, topicIds: topicIds.sort(), createdAt: now, updatedAt: now }); addedWords++
           }
         }
         return { addedTopics, addedWords, mergedWords }
@@ -95,7 +96,7 @@ export function createDictionaryRepository(db: QazaqDatabase) {
         await checkAndInterrupt(reasons, confirmed)
         if (textChanged) await db.progress.where('wordId').equals(original!.id).delete()
         const now = Date.now()
-        const word: Word = { id: original?.id ?? crypto.randomUUID(), kazakh, russian, topicIds, createdAt: original?.createdAt ?? now, updatedAt: now }
+        const word: Word = { id: original?.id ?? createId(), kazakh, russian, topicIds, createdAt: original?.createdAt ?? now, updatedAt: now }
         await db.words.put(word)
         return word.id
       })
@@ -117,7 +118,7 @@ export function createDictionaryRepository(db: QazaqDatabase) {
         }
         await checkAndInterrupt([], confirmed)
         const now = Date.now()
-        const topic: Topic = { id: original?.id ?? crypto.randomUUID(), name, createdAt: original?.createdAt ?? now, updatedAt: now }
+        const topic: Topic = { id: original?.id ?? createId(), name, createdAt: original?.createdAt ?? now, updatedAt: now }
         await db.topics.put(topic)
         return topic.id
       })

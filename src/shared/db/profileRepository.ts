@@ -1,3 +1,4 @@
+import { createId } from '../utils/id'
 import { validateAvatar } from '../../entities/profile/photo'
 import { liveQuery } from 'dexie'
 import { defaultSettings, type Profile, type ProfileSettings } from '../../entities/models'
@@ -56,7 +57,7 @@ export function createProfileRepository(db: QazaqDatabase) {
     observe() { return liveQuery(() => this.snapshot()) },
     async create(value: string, confirmed = false) {
       const name = validateName(value)
-      const id = crypto.randomUUID()
+      const id = createId()
       const now = Date.now()
       await db.transaction('rw', profileTables, async () => {
         await assertCanSwitch(id, confirmed)

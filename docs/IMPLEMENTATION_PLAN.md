@@ -141,3 +141,8 @@ Modern New использует общие страницы и компонен�
 ## Этап 7: реализация — 2026-10-12
 
 В feature/pwa добавлены manifest, обычные и maskable PNG-иконки, apple-touch-icon, production service worker с precache и offline navigation fallback, UI установки и ручного обновления. Разработка через Vite dev не кэшируется. IndexedDB и локальные профили сохраняются. Публикация HTTPS/GitHub Pages и общий словарь из GitHub пока не входят в выполненную часть выпуска. Результаты проверок и ограничения фиксируются в IMPLEMENTATION_STATUS.md.
+
+
+### HTTP на телефоне — 2026-10-13
+
+Исправлен запуск production PWA по HTTP в локальной сети: проверка поддержки до регистрации, явное пояснение необходимости HTTPS, тесты HTTP и secure-браузера без service worker. Доставка словаря на новое устройство из GitHub остаётся следующим отдельным шагом.

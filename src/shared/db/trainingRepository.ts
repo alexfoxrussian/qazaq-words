@@ -1,3 +1,4 @@
+import { createId } from '../utils/id'
 import { liveQuery } from 'dexie'
 import type { Answer, TrainingSession } from '../../entities/models'
 import { buildQueue, evaluateAnswer, scheduleNextReview } from '../../entities/training/domain'
@@ -48,7 +49,7 @@ export function createTrainingRepository(db: QazaqDatabase) {
         if (await db.sessions.where('[profileId+status]').equals([profileId, 'active']).count()) throw new ValidationError('Уже есть активная тренировка. Продолжите её или завершите.')
         const queue = await plan(profileId, topicId, now, Math.random)
         if (!queue.questions.length) throw new ValidationError(queue.skippedCount ? 'Для этой тренировки нужны слова хотя бы с четырьмя разными переводами. Другие переводы того же казахского слова не подходят как неверные варианты.' : 'В словаре нет подходящих слов. Добавьте слова или смените тему.')
-        const session: TrainingSession = { id: crypto.randomUUID(), profileId, status: 'active', startedAt: now, targetCount: queue.questions.length, answeredCount: 0, correctCount: 0, queueSnapshots: queue.questions, cursor: 0 }
+        const session: TrainingSession = { id: createId(), profileId, status: 'active', startedAt: now, targetCount: queue.questions.length, answeredCount: 0, correctCount: 0, queueSnapshots: queue.questions, cursor: 0 }
         await db.sessions.add(session)
         return session
       })
@@ -67,7 +68,7 @@ export function createTrainingRepository(db: QazaqDatabase) {
         if (!await db.words.get(question.wordId)) throw new ValidationError('Слово удалено. Завершите тренировку.')
         const previous = await db.progress.get([profileId, question.wordId])
         const next = scheduleNextReview(previous?.stage ?? 0, isCorrect, now)
-        const answer: Answer = { id: crypto.randomUUID(), profileId, sessionId, wordId: question.wordId, questionIndex, kazakhSnapshot: question.kazakh, russianSnapshot: question.russian, optionsSnapshot: [...question.options], selectedIndex, correctIndex: question.correctIndex, isCorrect, answeredAt: now }
+        const answer: Answer = { id: createId(), profileId, sessionId, wordId: question.wordId, questionIndex, kazakhSnapshot: question.kazakh, russianSnapshot: question.russian, optionsSnapshot: [...question.options], selectedIndex, correctIndex: question.correctIndex, isCorrect, answeredAt: now }
         await db.answers.add(answer)
         await db.progress.put({ profileId, wordId: question.wordId, ...next, lastAnsweredAt: now, correctCount: (previous?.correctCount ?? 0) + Number(isCorrect), incorrectCount: (previous?.incorrectCount ?? 0) + Number(!isCorrect) })
         const cursor = session.cursor + 1
