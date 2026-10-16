@@ -34,15 +34,21 @@ export function createGuestRepository(dictionary = dictionaryRepository) {
     },
     async answer(profileId: string, sessionId: string, questionIndex: number, selectedIndex: number) {
       if (!session || session.id !== sessionId || session.profileId !== profileId) throw new Error('Тренировка недоступна.')
-      const existing = answers.find((answer) => answer.questionIndex === questionIndex)
-      if (existing) return structuredClone(existing)
-      if (session.status !== 'active' || session.cursor !== questionIndex) throw new Error('Вопрос недоступен.')
       const question = session.queueSnapshots[questionIndex]
       if (!question) throw new Error('Вопрос не найден.')
       const isCorrect = evaluateAnswer(question, selectedIndex)
+      const existing = answers.find((answer) => answer.questionIndex === questionIndex)
+      if (existing) {
+        if (!existing.isCorrect && isCorrect && session.status === 'active' && session.cursor === questionIndex) {
+          session.cursor++
+          if (session.cursor === session.targetCount) { session.status = 'completed'; session.endedAt = Date.now() }
+        }
+        return structuredClone(existing)
+      }
+      if (session.status !== 'active' || session.cursor !== questionIndex) throw new Error('Вопрос недоступен.')
       const answer: Answer = { id: createId(), profileId, sessionId, wordId: question.wordId, questionIndex, kazakhSnapshot: question.kazakh, russianSnapshot: question.russian, optionsSnapshot: [...question.options], selectedIndex, correctIndex: question.correctIndex, isCorrect, answeredAt: Date.now() }
       answers.push(answer)
-      session.cursor++; session.answeredCount++; session.correctCount += Number(isCorrect)
+      session.cursor += Number(isCorrect); session.answeredCount++; session.correctCount += Number(isCorrect)
       if (session.cursor === session.targetCount) { session.status = 'completed'; session.endedAt = Date.now() }
       return structuredClone(answer)
     },

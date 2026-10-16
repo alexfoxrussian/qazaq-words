@@ -66,7 +66,7 @@ export function validateBackup(value: unknown): Backup {
     if (!['active', 'completed', 'interrupted'].includes(item.status)) invalid('неверный статус сеанса.')
     const questions = array(item.queueSnapshots).map(question)
     unique(questions.map((q) => q.wordId), 'слова в сеансе')
-    if (item.targetCount < 1 || item.targetCount !== questions.length || item.cursor !== item.answeredCount || item.answeredCount > item.targetCount || item.correctCount > item.answeredCount) invalid('несогласованные счётчики сеанса.')
+    if (item.targetCount < 1 || item.targetCount !== questions.length || item.cursor > item.answeredCount || item.answeredCount > item.cursor + 1 || item.answeredCount > item.targetCount || item.correctCount > item.answeredCount) invalid('несогласованные счётчики сеанса.')
     if (item.status === 'active') {
       if (item.endedAt !== undefined || item.cursor === item.targetCount || questions.some((q) => !words.has(q.wordId))) invalid('неверный активный сеанс.')
     } else {
@@ -87,6 +87,7 @@ export function validateBackup(value: unknown): Backup {
   for (const session of data.sessions) {
     const answers = (answersBySession.get(session.id) ?? []).sort((a, b) => a.questionIndex - b.questionIndex)
     if (answers.length !== session.answeredCount || answers.filter((a) => a.isCorrect).length !== session.correctCount || answers.some((a, index) => a.questionIndex !== index || (index > 0 && a.answeredAt < answers[index - 1].answeredAt))) invalid('ответы не соответствуют счётчикам или порядку сеанса.')
+    if (session.answeredCount > session.cursor && answers[session.cursor]?.isCorrect !== false) invalid('незавершённый вопрос должен содержать ошибку первой попытки.')
   }
   unique(data.appMeta.map((item) => item.key), 'ключи метаданных')
   if ((data.appMeta.length !== 2 && data.appMeta.length !== 3) || data.appMeta.some((item) => !['activeProfileId', 'initialized', 'dictionaryFeed'].includes(item.key)) || !data.appMeta.some((item) => item.key === 'initialized' && item.value === true)) invalid('неверные метаданные.')
