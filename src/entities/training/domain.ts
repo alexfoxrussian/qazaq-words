@@ -33,7 +33,7 @@ export function buildQueue(words: Word[], progress: Progress[], topicId: string,
   const filtered = words.filter((word) => !topicId || word.topicIds.includes(topicId))
   const due = filtered.filter((word) => states.has(word.id) && states.get(word.id)!.dueAt <= now)
     .sort((a, b) => states.get(a.id)!.dueAt - states.get(b.id)!.dueAt || order(a, b))
-  const fresh = filtered.filter((word) => !states.has(word.id)).sort(order)
+  const fresh = shuffle(filtered.filter((word) => !states.has(word.id)).sort(order), random)
   const scheduled = filtered.filter((word) => states.has(word.id) && states.get(word.id)!.dueAt > now)
     .sort((a, b) => states.get(a.id)!.dueAt - states.get(b.id)!.dueAt || order(a, b))
   const eligible = [...due, ...fresh, ...scheduled]

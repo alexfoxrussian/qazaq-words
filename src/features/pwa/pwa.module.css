@@ -1,7 +1,9 @@
-.panel { margin-top: 20px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); color: var(--text-muted); font-size: calc(12px + var(--font-offset)); }
-.panel p { margin: 0 0 12px; }
-.panel p:last-child { margin-bottom: 0; }
-.actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-.actions + p { margin-top: 12px; }
-@media (max-width: 639px) { .actions { flex-direction: column; } .actions button { width: 100%; } }
+.controls { margin-top: 16px; color: var(--text-muted); font-size: calc(12px + var(--font-offset)); }
+.meta, .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 20px; }
+.textButton { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 6px 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; text-underline-offset: 4px; }
+@media (hover: hover) { .textButton:hover { color: var(--accent); text-decoration: underline; } }
+.textButton:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 2px; }
+.notice { display: flex; flex-wrap: wrap; align-items: center; gap: 0 20px; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+.notice p { margin: 0; max-width: 65ch; line-height: 1.6; }
+.notice .textButton { color: var(--accent); }
+@media (max-width: 639px) { .notice { align-items: flex-start; flex-direction: column; } }

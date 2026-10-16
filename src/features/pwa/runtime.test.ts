@@ -17,12 +17,30 @@ beforeEach(() => {
   vi.stubGlobal('navigator', { onLine: true, serviceWorker: {} })
   vi.stubGlobal('window', {
     isSecureContext: true, matchMedia: () => ({ matches: false }), addEventListener: vi.fn(),
-    location: { reload: mocks.reload },
+    location: { reload: mocks.reload }, setInterval: vi.fn(),
   })
 })
 afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs() })
 
 describe('PWA lifecycle', () => {
+  it('checks automatically on registration and hourly while visible without activating an update', async () => {
+    vi.stubGlobal('document', { visibilityState: 'visible' })
+    const now = vi.spyOn(Date, 'now').mockReturnValue(1000)
+    await import('./runtime')
+    const update = vi.fn().mockResolvedValue(undefined)
+    mocks.register.mock.calls[0][0].onRegisteredSW('/sw.js', { active: {}, update })
+    await Promise.resolve()
+    expect(update).toHaveBeenCalledOnce()
+    const tick = vi.mocked(window.setInterval).mock.calls[0][0] as () => void
+    tick()
+    expect(update).toHaveBeenCalledOnce()
+    now.mockReturnValue(3601000)
+    tick()
+    expect(update).toHaveBeenCalledTimes(2)
+    expect(mocks.update).not.toHaveBeenCalled()
+    expect(mocks.reload).not.toHaveBeenCalled()
+    now.mockRestore()
+  })
   it('explains HTTP access from a phone without starting offline preparation', async () => {
     vi.stubGlobal('window', { isSecureContext: false, matchMedia: () => ({ matches: false }), addEventListener: vi.fn() })
     vi.stubGlobal('navigator', { onLine: true })

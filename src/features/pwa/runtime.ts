@@ -53,6 +53,7 @@ export const pwaRuntime = {
   },
   async update() {
     if (useTrainingStore.getState().session?.status === 'active') return
+    publish({ error: null })
     updateApproved = true
     if (reloadPending) window.location.reload()
     else {
@@ -74,6 +75,7 @@ const updateServiceWorker = import.meta.env.PROD && supported ? registerSW({
   onRegisteredSW: (_url, value) => {
     registration = value
     if (value?.active) publish({ ready: true })
+    void pwaRuntime.checkUpdate()
   },
   onRegisterError: () => publish({ error: 'Офлайн-версия пока недоступна. Проверьте соединение и перезагрузите страницу.' }),
 }) : async () => {}
@@ -92,3 +94,10 @@ window.addEventListener('offline', () => publish({ online: false }))
 window.addEventListener('focus', () => {
   if (Date.now() - lastCheck > 60 * 60 * 1000) void pwaRuntime.checkUpdate()
 })
+
+// Check long-running visible sessions too; never activate or reload automatically.
+if (import.meta.env.PROD && supported) {
+  window.setInterval(() => {
+    if (document.visibilityState === 'visible' && Date.now() - lastCheck >= 60 * 60 * 1000) void pwaRuntime.checkUpdate()
+  }, 60 * 60 * 1000)
+}

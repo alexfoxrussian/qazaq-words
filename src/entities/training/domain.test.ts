@@ -27,15 +27,28 @@ describe('интервалы и автоматическая проверка', 
 })
 
 describe('очередь и варианты', () => {
+  it('выбирает новые слова из всего словаря до ограничения длины, сохраняя приоритет повторений', () => {
+    const words = ['1', '2', '3', '4', '5', '6', '7', '8'].map((id) => word(id))
+    const states = [progress('8', 50), progress('7', 200)]
+    const first = buildQueue(words, states, '', 3, 100, () => 0).questions.map((item) => item.wordId)
+    const second = buildQueue(words, states, '', 3, 100, () => .99).questions.map((item) => item.wordId)
+    expect(first[0]).toBe('8')
+    expect(second[0]).toBe('8')
+    expect(first.slice(1)).not.toEqual(second.slice(1))
+    expect(first).not.toContain('7')
+    expect(second).not.toContain('7')
+    expect(new Set(first).size).toBe(3)
+    expect(words.map((item) => item.id)).toEqual(['1', '2', '3', '4', '5', '6', '7', '8'])
+  })
   it('ставит просроченные первыми и добавляет будущие повторения после новых', () => {
     const words = ['1', '2', '3', '4', '5', '6'].map((id) => word(id))
     const states = [progress('3', 100), progress('4', 90), progress('1', 101)]
     const queue = buildQueue(words, states, '', 4, 100, () => .5)
-    expect(queue.questions.map((item) => item.wordId)).toEqual(['4', '3', '2', '5'])
+    expect(queue.questions.map((item) => item.wordId)).toEqual(['4', '3', '2', '6'])
     expect(queue.dueCount).toBe(2)
     expect(queue.newCount).toBe(3)
     expect(queue.scheduledCount).toBe(1)
-    expect(buildQueue(words, states, '', 10, 100, () => .5).questions.map((item) => item.wordId)).toEqual(['4', '3', '2', '5', '6', '1'])
+    expect(buildQueue(words, states, '', 10, 100, () => .5).questions.map((item) => item.wordId)).toEqual(['4', '3', '2', '6', '5', '1'])
   })
   it('использует отвлекающие из общего словаря при фильтре одной темы', () => {
     const words = [word('1', 'Один', ['topic']), word('2', 'Два'), word('3', 'Три'), word('4', 'Четыре')]
