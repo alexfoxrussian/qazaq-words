@@ -13,17 +13,19 @@ import { BentoCard, EmptyState, Modal } from '../shared/ui/components'
 import styles from './shell.module.css'
 import { PwaControls } from '../features/pwa/PwaControls'
 
-const navigation: { path: string; label: string; icon: LucideIcon }[] = [
+const navigation: { path: string; label: string; icon: LucideIcon; requiresProfile?: boolean; secondary?: boolean; shortLabel?: string }[] = [
   { path: '/', label: 'Главная', icon: House },
-  { path: '/training', label: 'Тренировка', icon: Sparkles },
+  { path: '/training', label: 'Тренировка', icon: Sparkles, shortLabel: 'Учить' },
   { path: '/dictionary', label: 'Словарь', icon: BookOpen },
-  { path: '/statistics', label: 'Статистика', icon: ChartNoAxesCombined },
-  { path: '/profile', label: 'Профиль', icon: UserRound },
-  { path: '/settings', label: 'Настройки', icon: Settings },
+  { path: '/statistics', label: 'Статистика', icon: ChartNoAxesCombined, requiresProfile: true, shortLabel: 'Итоги' },
+  { path: '/profile', label: 'Профиль', icon: UserRound, secondary: true },
+  { path: '/settings', label: 'Настройки', icon: Settings, requiresProfile: true, secondary: true },
 ]
 
 function Shell() {
   const location = useLocation()
+  const profile = useProfileStore((state) => state.activeProfile)
+  const visibleNavigation = navigation.filter((item) => !item.requiresProfile || profile)
   const [moreOpen, setMoreOpen] = useState(false)
   const moreActive = ['/profile', '/settings'].includes(location.pathname)
   useLayoutEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }) }, [location.key])
@@ -32,8 +34,8 @@ function Shell() {
     <aside className={styles.sidebar}>
       <Link to="/" className={styles.brand}><span className={styles.logo}>Q</span><span>Qazaq Words<small>Казахский каждый день</small></span></Link>
       <nav className={styles.navigation} aria-label="Основная навигация">
-        {navigation.map(({ path, label, icon: Icon }, index) => <NavLink key={path} to={path} end={path === '/'} aria-label={label} className={({ isActive }) => `${styles.navLink} ${index >= 4 ? styles.secondaryNav : ''} ${isActive ? styles.active : ''}`}><Icon size={20} aria-hidden="true" /><span className={index === 1 || index === 3 ? styles.longLabel : ''}>{label}</span>{(index === 1 || index === 3) && <span className={styles.shortLabel} aria-hidden="true">{index === 1 ? 'Учить' : 'Итоги'}</span>}</NavLink>)}
-        <button type="button" className={`${styles.navLink} ${styles.moreButton} ${moreActive ? styles.active : ''}`} aria-haspopup="dialog" aria-expanded={moreOpen} onClick={() => setMoreOpen(true)}><MoreHorizontal size={20} aria-hidden="true" /><span>Ещё</span></button>
+        {visibleNavigation.map(({ path, label, icon: Icon, secondary, shortLabel }) => <NavLink key={path} to={path} end={path === '/'} aria-label={label} className={({ isActive }) => `${styles.navLink} ${secondary && profile ? styles.secondaryNav : ''} ${isActive ? styles.active : ''}`}><Icon size={20} aria-hidden="true" /><span className={shortLabel ? styles.longLabel : ''}>{label}</span>{shortLabel && <span className={styles.shortLabel} aria-hidden="true">{shortLabel}</span>}</NavLink>)}
+        {profile && <button type="button" className={`${styles.navLink} ${styles.moreButton} ${moreActive ? styles.active : ''}`} aria-haspopup="dialog" aria-expanded={moreOpen} onClick={() => setMoreOpen(true)}><MoreHorizontal size={20} aria-hidden="true" /><span>Ещё</span></button>}
       </nav>
       <div className={styles.localNote}><span className={styles.dot} />Локальное приложение<p>Ваше обучение — на этом устройстве.</p></div>
     </aside>
@@ -43,7 +45,7 @@ function Shell() {
       <footer className={styles.footer}>Qazaq Words · Локальное обучение</footer>
       <PwaControls />
     </main>
-    {moreOpen && <Modal title="Ещё" closeLabel="Закрыть" onClose={() => setMoreOpen(false)}><nav className={styles.moreLinks} aria-label="Профиль и настройки">{navigation.slice(4).map(({ path, label, icon: Icon }) => <NavLink key={path} to={path} className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`} onClick={() => setMoreOpen(false)}><Icon size={22} aria-hidden="true" /><span>{label}</span></NavLink>)}</nav></Modal>}
+    {profile && moreOpen && <Modal title="Ещё" closeLabel="Закрыть" onClose={() => setMoreOpen(false)}><nav className={styles.moreLinks} aria-label="Профиль и настройки">{visibleNavigation.filter((item) => item.secondary).map(({ path, label, icon: Icon }) => <NavLink key={path} to={path} className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`} onClick={() => setMoreOpen(false)}><Icon size={22} aria-hidden="true" /><span>{label}</span></NavLink>)}</nav></Modal>}
   </div>
 }
 
