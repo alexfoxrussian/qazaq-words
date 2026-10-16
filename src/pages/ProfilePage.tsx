@@ -54,12 +54,12 @@ export function ProfilePage() {
     }, 'Профиль создан.')
   }
 
-  const feedback = <>{error && <p className={styles.error} role="alert">{error}</p>}<p role="status" className={styles.muted}>{message}</p></>
+  const feedback = <>{error && <p className={styles.error} role="alert">{error}</p>}{message && <p role="status" className={styles.muted}>{message}</p>}</>
   return <>
-    <header className={styles.heading}><span className={styles.eyebrow}>НА ЭТОМ УСТРОЙСТВЕ</span><h1>Локальные профили</h1><p>У каждого свой прогресс. У всех — общий словарь.</p></header>
-    {!activeProfile && <p className={styles.muted}>Вы сейчас гость. Войдите в существующий профиль или создайте новый, чтобы сохранять прогресс.</p>}
+    <header className={`${styles.heading} ${styles.compactHeading}`}><h1>Локальные профили</h1><p>{profiles.length ? 'У каждого свой прогресс. У всех — общий словарь.' : 'Достаточно имени — регистрация и пароль не нужны.'}</p></header>
+    {!activeProfile && profiles.length > 0 && <p className={styles.muted}>Вы сейчас гость. Выберите профиль или создайте новый, чтобы сохранять прогресс.</p>}
     {activeProfile && <Button variant="secondary" disabled={busy} onClick={() => void run(async (confirmed) => { await profileRepository.logout(confirmed); useProfileStore.getState().applySnapshot(await profileRepository.snapshot()); navigate('/') }, 'Вы вышли в гостевой режим.')}>Выйти</Button>}
-    {!activeProfile && <Link to="/training">Продолжить как гость →</Link>}
+    {!activeProfile && <Link className={styles.guestContinue} to="/training">Продолжить как гость →</Link>}
     {!editing && !deleting && !switchConfirmation && feedback}
     <input ref={photoInput} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(event) => {
       const file = event.target.files?.[0], id = photoProfileId.current
@@ -67,8 +67,7 @@ export function ProfilePage() {
       if (file && id) void run(async () => profileRepository.setPhoto(id, await prepareProfilePhoto(file)), 'Фото профиля сохранено.')
     }} />
     <div className={`${styles.grid} ${styles.profileGrid}`}>
-      <BentoCard className={styles.wide} title="Ваши профили"><p className={styles.muted}>Фото: JPG, PNG или WebP до 5 МБ. Квадратная миниатюра сохраняется только на устройстве и включается в backup.</p>
-        {profiles.length === 0 && <p className={styles.muted}>Профилей пока нет. Начните с имени — регистрация не нужна.</p>}
+      {profiles.length > 0 && <BentoCard className={styles.wide} title="Ваши профили">
         <div className={styles.profileList}>{profiles.map((profile) => <article key={profile.id} className={styles.profileRow} data-active={profile.id === activeProfile?.id}>
           <div className={styles.profileIdentity}><ProfileAvatar profile={profile} className={styles.profilePhoto} /><div><h3>{profile.name}</h3><p className={styles.muted}>{profile.id === activeProfile?.id ? 'Активный профиль' : 'Локальный профиль'}</p></div></div>
           <div className={styles.actions}>
@@ -78,13 +77,13 @@ export function ProfilePage() {
             <Button variant="secondary" disabled={busy} onClick={() => { setError(null); setMessage(''); setEditing(profile); setEditName(profile.name) }}>Переименовать<span className={styles.srOnly}> {profile.name}</span></Button>
             <Button variant="secondary" disabled={busy} onClick={() => { setError(null); setMessage(''); setDeleting(profile) }}>Удалить<span className={styles.srOnly}> {profile.name}</span></Button>
           </div>
-        </article>)}</div>
-      </BentoCard>
-      <BentoCard className={styles.createProfileCard} title="Создать профиль"><p className={`${styles.newOnly} ${styles.muted}`}>Свой темп, свои результаты. Начните с имени.</p><form className={styles.form} onSubmit={create} aria-busy={busy}>
+        </article>)}</div><details className={styles.helpDetails}><summary>Требования к фото</summary><p className={styles.muted}>JPG, PNG или WebP до 5 МБ. Фото необязательно, сохраняется только на устройстве и включается в резервную копию.</p></details>
+      </BentoCard>}
+      <BentoCard className={`${styles.createProfileCard} ${profiles.length === 0 ? styles.firstProfileCard : ''}`} title="Создать профиль"><p className={styles.muted}>Имя нужно, чтобы отличать ваш прогресс от других профилей на устройстве.</p><form className={styles.form} onSubmit={create} aria-busy={busy}>
         <FormField id="profile-name" label="Имя профиля" value={name} onChange={(event) => setName(event.target.value)} maxLength={80} required disabled={busy} autoComplete="off" />
         <Button type="submit" disabled={busy}>{busy ? 'Сохраняем…' : 'Создать профиль'}</Button>
       </form></BentoCard>
-      <BentoCard className={`${styles.full} ${styles.dataPanel}`} title="Ваши данные"><p className={styles.muted}>Данные хранятся в этом браузере. Очистка данных сайта может удалить их. Профили разделяют прогресс и не защищаются паролем.</p><Button variant="secondary" onClick={() => setInfoOpen(true)}>О локальном хранении</Button><BackupControls /></BentoCard>
+      <section className={`${styles.full} ${styles.profileData}`} aria-label="Ваши данные"><details className={styles.backupDetails}><summary>Ваши данные и резервная копия</summary><p className={styles.muted}>Данные хранятся в этом браузере. Очистка данных сайта может удалить их. Профили разделяют прогресс и не защищаются паролем.</p><Button variant="secondary" onClick={() => setInfoOpen(true)}>О локальном хранении</Button><BackupControls /></details></section>
     </div>
     {editing && <Modal title="Переименовать профиль" closeLabel="Отмена" busy={busy} onClose={() => { setEditing(null); setError(null) }}>
       <form className={styles.form} onSubmit={(event) => { event.preventDefault(); void run(async () => { await profileRepository.rename(editing.id, editName); setEditing(null) }, 'Имя профиля сохранено.') }}>

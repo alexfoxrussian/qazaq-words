@@ -63,7 +63,14 @@ export function createTrainingRepository(db: QazaqDatabase) {
         if (!Number.isInteger(questionIndex) || !question) throw new ValidationError('Вопрос не найден.')
         const isCorrect = evaluateAnswer(question, selectedIndex)
         const existing = await db.answers.where('[sessionId+questionIndex]').equals([sessionId, questionIndex]).first()
-        if (existing) return existing
+        if (existing) {
+          // Corrections complete the question, but never rewrite the first attempt.
+          if (!existing.isCorrect && isCorrect && session.status === 'active' && session.cursor === questionIndex) {
+            const cursor = session.cursor + 1
+            await db.sessions.update(sessionId, { cursor, ...(cursor === session.targetCount ? { status: 'completed', endedAt: now } : {}) })
+          }
+          return existing
+        }
         if (session.status !== 'active' || session.cursor !== questionIndex) throw new ValidationError('Тренировка уже завершена или этот вопрос недоступен.')
         if (!await db.words.get(question.wordId)) throw new ValidationError('Слово удалено. Завершите тренировку.')
         const previous = await db.progress.get([profileId, question.wordId])
@@ -71,7 +78,7 @@ export function createTrainingRepository(db: QazaqDatabase) {
         const answer: Answer = { id: createId(), profileId, sessionId, wordId: question.wordId, questionIndex, kazakhSnapshot: question.kazakh, russianSnapshot: question.russian, optionsSnapshot: [...question.options], selectedIndex, correctIndex: question.correctIndex, isCorrect, answeredAt: now }
         await db.answers.add(answer)
         await db.progress.put({ profileId, wordId: question.wordId, ...next, lastAnsweredAt: now, correctCount: (previous?.correctCount ?? 0) + Number(isCorrect), incorrectCount: (previous?.incorrectCount ?? 0) + Number(!isCorrect) })
-        const cursor = session.cursor + 1
+        const cursor = session.cursor + Number(isCorrect)
         const completed = cursor === session.targetCount
         await db.sessions.update(sessionId, { cursor, answeredCount: session.answeredCount + 1, correctCount: session.correctCount + Number(isCorrect), ...(completed ? { status: 'completed', endedAt: now } : {}) })
         return answer

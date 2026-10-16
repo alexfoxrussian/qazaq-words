@@ -36,3 +36,17 @@ it('keeps guest settings and interruption in memory and a fresh instance starts 
   expect(await createGuestRepository(dictionary).snapshot()).toEqual({ session: null, answers: [] })
   expect(await db.sessions.count()).toBe(0)
 })
+
+it('waits for a correction on the final word and retains the first-attempt error', async () => {
+  const guest = createGuestRepository(createDictionaryRepository(db))
+  await guest.setSessionLength('guest', 1)
+  const session = await guest.start('guest', '')
+  const correct = session.queueSnapshots[0].correctIndex
+  await guest.answer('guest', session.id, 0, (correct + 1) % 4)
+  await guest.answer('guest', session.id, 0, (correct + 2) % 4)
+  expect((await guest.snapshot()).session).toMatchObject({ status: 'active', cursor: 0, answeredCount: 1 })
+  await guest.answer('guest', session.id, 0, correct)
+  expect((await guest.snapshot()).session).toMatchObject({ status: 'completed', cursor: 1, answeredCount: 1, correctCount: 0 })
+  expect((await guest.snapshot()).answers).toHaveLength(1)
+  expect(await db.answers.count()).toBe(0)
+})

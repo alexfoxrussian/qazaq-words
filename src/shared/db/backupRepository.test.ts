@@ -46,8 +46,12 @@ describe('полный backup', () => {
     const activeBackup = await repo.export()
     await training.interrupt(owner, session.id)
     await repo.restore(activeBackup, true)
-    expect((await training.snapshot(owner)).session).toMatchObject({ status: 'active', cursor: 1, answeredCount: 1 })
+    expect((await training.snapshot(owner)).session).toMatchObject({ status: 'active', cursor: 0, answeredCount: 1 })
     expect((await training.snapshot(owner)).session?.queueSnapshots).toEqual(session.queueSnapshots)
+    await training.answer(owner, session.id, 0, session.queueSnapshots[0].correctIndex, 5000)
+    expect((await training.snapshot(owner)).session).toMatchObject({ cursor: 1, answeredCount: 1, correctCount: 0 })
+    expect((await training.snapshot(owner)).answers[0].isCorrect).toBe(false)
+    expect(validateBackup(await repo.export()).data.sessions.find((item) => item.id === session.id)?.cursor).toBe(1)
   })
   it.each(['version', 'duplicate', 'reference', 'index', 'correctness', 'counter', 'options', 'settings', 'progress', 'meta'])('отклоняет повреждение %s без записи', async (kind) => {
     const invalid = structuredClone(saved)

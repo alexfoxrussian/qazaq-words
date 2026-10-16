@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react'
-import { ChevronLeft, ChevronRight, Pencil, Trash2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { Topic, Word } from '../entities/models'
 import { wordPage, type WordSort } from '../features/word-management/list'
@@ -9,6 +9,7 @@ import { useDictionaryUi } from '../features/word-management/store'
 import { ConfirmationRequired, dictionaryRepository, type DictionarySnapshot, type WordDraft } from '../shared/db/dictionaryRepository'
 import { MAX_DICTIONARY_BYTES, parseDictionaryFile } from '../entities/word/dictionaryTransfer'
 import { dataErrorMessage } from '../shared/db/errors'
+import { wordCount } from '../shared/utils/text'
 import { BentoCard, Button, IconButton, EmptyState, FormField, Modal } from '../shared/ui/components'
 import styles from './pages.module.css'
 
@@ -16,6 +17,7 @@ type Editor = { kind: 'word'; original?: Word } | { kind: 'topic'; original?: To
 type Operation = (confirmed: boolean) => Promise<unknown>
 interface Confirmation { reasons: string[]; operation: Operation; message: string }
 const blankWord: WordDraft = { kazakh: '', russian: '', topicIds: [] }
+const sortLabels: Record<WordSort, string> = { 'kazakh-asc': 'Казахское слово: А → Я', 'kazakh-desc': 'Казахское слово: Я → А', 'russian-asc': 'Перевод: А → Я', 'russian-desc': 'Перевод: Я → А', 'created-desc': 'Сначала новые', 'created-asc': 'Сначала старые' }
 
 export function DictionaryPage() {
   const canEdit = !!useProfileStore((state) => state.activeProfile)
@@ -34,6 +36,16 @@ export function DictionaryPage() {
   const scrollToWords = useRef(false)
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState('')
+  const [transferOpen, setTransferOpen] = useState(false)
+  const [tagsExpanded, setTagsExpanded] = useState(() => window.matchMedia('(min-width: 640px)').matches)
+  const [filtersExpanded, setFiltersExpanded] = useState(() => window.matchMedia('(min-width: 640px)').matches)
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 640px)')
+    const update = () => { setTagsExpanded(media.matches); setFiltersExpanded(media.matches) }
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
 
   useLayoutEffect(() => {
     if (!scrollToWords.current) return
@@ -57,7 +69,6 @@ export function DictionaryPage() {
     return () => subscription.unsubscribe()
   }, [attempt])
 
-  // A removed topic must not leave an invisible filter applied.
   useEffect(() => {
     if (snapshot && topicId && !snapshot.topics.some((topic) => topic.id === topicId)) setTopicId('')
   }, [snapshot, topicId, setTopicId])
@@ -120,56 +131,59 @@ export function DictionaryPage() {
     const value = topicName; const original = editor.original
     void run((confirmed) => dictionaryRepository.saveTopic(value, original, confirmed), 'Тег сохранён.')
   }
-  const feedback = <>{error && <p className={styles.error} role="alert">{error}</p>}<p role="status" className={styles.muted}>{message}</p></>
+  const feedback = <>{error && <p className={styles.error} role="alert">{error}</p>}{message && <p role="status" className={styles.muted}>{message}</p>}</>
   const effectiveTopicId = snapshot?.topics.some((topic) => topic.id === topicId) ? topicId : ''
   const words = filterWords(snapshot?.words ?? [], search, effectiveTopicId)
-
   const pagination = wordPage(words, sort, page, pageSize)
+  const hasFilters = !!(search || topicId || sort !== 'kazakh-asc')
 
   return <>
-    <header className={styles.heading}><span className={styles.eyebrow}>ОБЩИЙ ДЛЯ ВСЕХ ПРОФИЛЕЙ</span><h1>Словарь</h1><p>Ваши казахские слова, русские переводы и теги.</p></header>
+    <header className={`${styles.heading} ${styles.compactHeading}`}><h1>Словарь</h1><p>{snapshot ? wordCount(snapshot.words.length) : 'Слова и переводы'} · общий для всех профилей</p></header>
     {loadError ? <BentoCard title="Не удалось загрузить словарь"><p role="alert">{loadError}</p><Button onClick={() => setAttempt((value) => value + 1)}>Повторить загрузку</Button></BentoCard> : !snapshot ? <p role="status">Загружаем словарь…</p> : <>
-      {!canEdit && <p className={styles.muted}>Гость может просматривать словарь и тренироваться. Для изменения слов <Link to="/profile">войдите в профиль</Link>.</p>}
       {!editor && !confirmation && feedback}
-      <div className={styles.dictionaryLayout}>
-      <div className={styles.grid}>
-        <BentoCard className={styles.wide} title={`Слова · ${snapshot.words.length}`}>
-          <div className={styles.dictionaryTools}>
-            <FormField id="word-search" label="Поиск слова или перевода" placeholder="Поиск по словарю" value={search} onChange={(event) => setSearch(event.target.value)} />
-            <label className={styles.selectField}>Тег словаря<select value={effectiveTopicId} onChange={(event) => setTopicId(event.target.value)}><option value="">Все теги</option>{snapshot.topics.map((topic) => <option key={topic.id} value={topic.id}>{topic.name}</option>)}</select></label>
-            <label className={styles.selectField}>Сортировка<select value={sort} onChange={(event) => setSort(event.target.value as WordSort)}><option value="kazakh-asc">Казахское слово: А → Я</option><option value="kazakh-desc">Казахское слово: Я → А</option><option value="russian-asc">Перевод: А → Я</option><option value="russian-desc">Перевод: Я → А</option><option value="created-desc">Сначала новые</option><option value="created-asc">Сначала старые</option></select></label>
-          </div>
-          <div className={styles.actions}>{canEdit && <><Button disabled={busy} onClick={() => openWord()}>Добавить слово</Button><Button variant="secondary" disabled={busy} onClick={() => void exportDictionary()}>Экспортировать словарь</Button><Button variant="secondary" disabled={busy} onClick={() => fileInput.current?.click()}>Импортировать словарь</Button></>}{(search || topicId) && <Button variant="secondary" onClick={() => { setSearch(''); setTopicId('') }}>Сбросить фильтры</Button>}</div>
+      <div className={styles.dictionaryLayout}><div className={styles.grid}>
+        <BentoCard className={`${styles.wide} ${styles.dictionaryCard}`}>
+          <h2 className={styles.srOnly}>Слова и переводы</h2>
+          <div className={styles.dictionarySearch}><FormField id="word-search" label="Поиск слова или перевода" placeholder="Поиск по словарю" value={search} onChange={(event) => setSearch(event.target.value)} /></div>
+          <details className={styles.dictionaryFilters} open={filtersExpanded} onToggle={(event) => setFiltersExpanded(event.currentTarget.open)}>
+            <summary>Фильтры и сортировка{(effectiveTopicId || sort !== 'kazakh-asc') && <span className={styles.filterState}>{[snapshot.topics.find((topic) => topic.id === effectiveTopicId)?.name, sort !== 'kazakh-asc' ? sortLabels[sort] : null].filter(Boolean).join(' · ')}</span>}</summary>
+            <div className={styles.dictionaryTools}>
+              <label className={styles.selectField}>Тег словаря<select value={effectiveTopicId} onChange={(event) => setTopicId(event.target.value)}><option value="">Все теги</option>{snapshot.topics.map((topic) => <option key={topic.id} value={topic.id}>{topic.name}</option>)}</select></label>
+              <label className={styles.selectField}>Сортировка<select value={sort} onChange={(event) => setSort(event.target.value as WordSort)}>{(Object.entries(sortLabels) as [WordSort, string][]).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
+            </div>
+          </details>
+          <div className={styles.actions}>{canEdit && <><Button disabled={busy} onClick={() => openWord()}>Добавить слово</Button><Button variant="secondary" disabled={busy} onClick={() => setTransferOpen(true)}><MoreHorizontal size={18} aria-hidden="true" /> Действия</Button></>}{hasFilters && <Button variant="secondary" onClick={() => { setSearch(''); setTopicId(''); setSort('kazakh-asc') }}>Сбросить фильтры</Button>}</div>
           <input ref={fileInput} type="file" accept=".json,application/json" hidden onChange={(event) => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void readImport(file) }} />
-          {canEdit && <p className={styles.muted}>Импорт и экспорт JSON включают все слова и теги, независимо от фильтров и страницы. Импорт дополняет словарь и сохраняет прогресс. Файл до 25 MiB.</p>}
           {words.length === 0 ? <EmptyState title={snapshot.words.length ? 'Совпадений нет' : 'Словарь пока пуст'}>{snapshot.words.length ? 'Измените запрос или выберите другой тег.' : 'Добавьте своё первое слово и один русский перевод. Словарь общий для всех профилей.'}</EmptyState> : <div ref={wordList} className={styles.wordList} role="region" aria-label="Список слов" tabIndex={-1}>
-            <div className={`${styles.newOnly} ${styles.wordColumns}`} aria-hidden="true"><span>Қазақша</span><span>Русский перевод</span><span>Действия</span></div>
-            {pagination.words.map((word) => <article key={word.id} className={styles.wordRow}>
-              <h3>{word.kazakh}</h3><p>{word.russian}</p>
+            <div className={`${styles.newOnly} ${styles.wordColumns} ${!canEdit ? styles.readOnlyColumns : ''}`} aria-hidden="true"><span lang="kk">Қазақша</span><span>Русский перевод</span>{canEdit && <span>Действия</span>}</div>
+            {pagination.words.map((word, index) => <article key={word.id} className={styles.wordRow} data-continuation={index > 0 && pagination.words[index - 1].kazakh === word.kazakh}>
+              <h3 lang="kk"><span className={index > 0 && pagination.words[index - 1].kazakh === word.kazakh ? styles.srOnly : undefined}>{word.kazakh}</span></h3><p>{word.russian}</p>
               <div className={styles.tags}>{word.topicIds.map((id) => <span key={id}>{snapshot.topics.find((topic) => topic.id === id)?.name}</span>)}</div>
-              <div className={styles.actions}>{canEdit && <><IconButton label={`Редактировать слово ${word.kazakh}`} disabled={busy} onClick={() => openWord(word)}><Pencil size={18} aria-hidden="true" /></IconButton><IconButton label={`Удалить слово ${word.kazakh}`} disabled={busy} onClick={() => void run((confirmed) => dictionaryRepository.removeWord(word, confirmed), 'Слово удалено.')}><Trash2 size={18} aria-hidden="true" /></IconButton></>}</div>
+              <div className={styles.actions}>{canEdit && <><IconButton label={`Редактировать слово ${word.kazakh} — ${word.russian}`} disabled={busy} onClick={() => openWord(word)}><Pencil size={18} aria-hidden="true" /></IconButton><IconButton label={`Удалить слово ${word.kazakh} — ${word.russian}`} disabled={busy} onClick={() => void run((confirmed) => dictionaryRepository.removeWord(word, confirmed), 'Слово удалено.')}><Trash2 size={18} aria-hidden="true" /></IconButton></>}</div>
             </article>)}
           </div>}
+          {!canEdit && <p className={styles.muted}>Чтобы добавлять и изменять слова, <Link to="/profile">выберите или создайте профиль</Link>.</p>}
           <div className={styles.pagination}>
-            <p className={styles.muted} role="status">{pagination.start}–{pagination.end} из {pagination.total} слов</p>
+            <p className={styles.muted} role="status">{pagination.start}–{pagination.end} из {pagination.total.toLocaleString('ru-RU')}</p>
             <label className={styles.selectField}>На странице<select value={pageSize} onChange={(event) => { scrollToWords.current = true; setPageSize(Number(event.target.value)) }}>{[10, 20, 50].map((size) => <option key={size} value={size}>{size}</option>)}</select></label>
             <nav className={styles.pageNavigation} aria-label="Страницы словаря"><IconButton label="Предыдущая страница" disabled={pagination.page === 1} onClick={() => changePage(pagination.page - 1)}><ChevronLeft size={20} aria-hidden="true" /></IconButton><span>Страница {pagination.page} из {pagination.pages}</span><IconButton label="Следующая страница" disabled={pagination.page === pagination.pages} onClick={() => changePage(pagination.page + 1)}><ChevronRight size={20} aria-hidden="true" /></IconButton></nav>
           </div>
         </BentoCard>
-        <BentoCard title="Теги словаря"><p className={styles.muted}>Классификация общих слов для поиска и тренировки.</p>{canEdit && <Button disabled={busy} onClick={() => openTopic()}>Добавить тег</Button>}
+        <BentoCard className={styles.tagPanel}><details className={styles.tagDetails} open={tagsExpanded} onToggle={(event) => setTagsExpanded(event.currentTarget.open)}><summary>Теги словаря <span>{snapshot.topics.length}</span></summary><div className={styles.tagContent}><p className={styles.muted}>Классификация общих слов для поиска и тренировки.</p>{canEdit && <Button disabled={busy} onClick={() => openTopic()}>Добавить тег</Button>}
           {!snapshot.topics.length && <p className={styles.muted}>Тегов пока нет. Слова можно добавлять без тега.</p>}
-          {snapshot.topics.map((topic) => <article className={styles.topicRow} key={topic.id}><div className={styles.topicName}><h3>{topic.name}</h3><span className={`${styles.newOnly} ${styles.topicCount}`}>{snapshot.words.filter((word) => word.topicIds.includes(topic.id)).length} слов</span></div><div className={styles.actions}>{canEdit && <><IconButton label={`Переименовать тег ${topic.name}`} disabled={busy} onClick={() => openTopic(topic)}><Pencil size={18} aria-hidden="true" /></IconButton><IconButton label={`Удалить тег ${topic.name}`} disabled={busy} onClick={() => void run((confirmed) => dictionaryRepository.removeTopic(topic, confirmed), 'Тег удалён.')}><Trash2 size={18} aria-hidden="true" /></IconButton></>}</div></article>)}
-        </BentoCard>
+          {snapshot.topics.map((topic) => <article className={styles.topicRow} key={topic.id}><div className={styles.topicName}><h3>{topic.name}</h3><span className={`${styles.newOnly} ${styles.topicCount}`}>{wordCount(snapshot.words.filter((word) => word.topicIds.includes(topic.id)).length)}</span></div><div className={styles.actions}>{canEdit && <><IconButton label={`Переименовать тег ${topic.name}`} disabled={busy} onClick={() => openTopic(topic)}><Pencil size={18} aria-hidden="true" /></IconButton><IconButton label={`Удалить тег ${topic.name}`} disabled={busy} onClick={() => void run((confirmed) => dictionaryRepository.removeTopic(topic, confirmed), 'Тег удалён.')}><Trash2 size={18} aria-hidden="true" /></IconButton></>}</div></article>)}
+        </div></details></BentoCard>
       </div></div>
     </>}
-    {canEdit && editor && !confirmation && <Modal key="editor" title={editor.kind === 'word' ? (editor.original ? 'Редактировать слово' : 'Добавить слово') : (editor.original ? 'Переименовать тег' : 'Добавить тег')} closeLabel="Отмена" busy={busy} onClose={() => { setEditor(null); setError(null) }}>
+    {canEdit && transferOpen && <Modal title="Действия со словарём" closeLabel="Закрыть" busy={busy} onClose={() => setTransferOpen(false)}><p className={styles.muted}>Переносит только слова и теги, без профилей и результатов. Для полной копии используйте «Резервную копию» в Настройках.</p><div className={styles.transferActions}><Button variant="secondary" disabled={busy} onClick={() => { setTransferOpen(false); void exportDictionary() }}>Экспортировать словарь</Button><Button variant="secondary" disabled={busy} onClick={() => { setTransferOpen(false); fileInput.current?.click() }}>Импортировать словарь</Button></div><p className={styles.muted}>Все слова и теги, независимо от фильтров. Импорт дополняет словарь и сохраняет прогресс. Файл JSON до 25 MiB.</p></Modal>}
+    {canEdit && editor && !confirmation && <Modal key="editor" title={editor.kind === 'word' ? (editor.original ? 'Редактировать слово' : 'Добавить слово') : (editor.original ? 'Переименовать тег' : 'Добавить тег')} closeLabel="Отмена" busy={busy} footer={<Button type="submit" form="dictionary-editor" disabled={busy}>{busy ? 'Сохраняем…' : editor.kind === 'word' ? 'Сохранить слово' : 'Сохранить тег'}</Button>} onClose={() => { setEditor(null); setError(null) }}>
       <p>Это изменит словарь для всех профилей.</p>
-      {editor.kind === 'word' ? <form className={styles.form} onSubmit={submitWord}>
-        <FormField id="word-kazakh" label="Казахское слово" value={draft.kazakh} onChange={(event) => setDraft({ ...draft, kazakh: event.target.value })} required maxLength={200} disabled={busy} />
+      {editor.kind === 'word' ? <form id="dictionary-editor" className={styles.form} onSubmit={submitWord}>
+        <FormField id="word-kazakh" lang="kk" label="Казахское слово" value={draft.kazakh} onChange={(event) => setDraft({ ...draft, kazakh: event.target.value })} required maxLength={200} disabled={busy} />
         <FormField id="word-russian" label="Русский перевод" value={draft.russian} onChange={(event) => setDraft({ ...draft, russian: event.target.value })} required maxLength={200} disabled={busy} />
-        <fieldset className={styles.topicChoices} disabled={busy}><legend>Теги (необязательно)</legend>{snapshot?.topics.map((topic) => <label key={topic.id}><input type="checkbox" checked={draft.topicIds.includes(topic.id)} onChange={(event) => setDraft({ ...draft, topicIds: event.target.checked ? [...draft.topicIds, topic.id] : draft.topicIds.filter((id) => id !== topic.id) })} />{topic.name}</label>)}{!snapshot?.topics.length && <p className={styles.muted}>Тегов пока нет.</p>}</fieldset>
-        {feedback}<Button type="submit" disabled={busy}>{busy ? 'Сохраняем…' : 'Сохранить слово'}</Button>
-      </form> : <form className={styles.form} onSubmit={submitTopic}><FormField id="topic-name" label="Название тега" value={topicName} onChange={(event) => setTopicName(event.target.value)} required maxLength={80} disabled={busy} />{feedback}<Button type="submit" disabled={busy}>Сохранить тег</Button></form>}
+        <details className={styles.editorTags}><summary>Теги · выбрано {draft.topicIds.length}</summary><fieldset className={styles.topicChoices} disabled={busy}><legend>Теги (необязательно)</legend>{snapshot?.topics.map((topic) => <label key={topic.id}><input type="checkbox" checked={draft.topicIds.includes(topic.id)} onChange={(event) => setDraft({ ...draft, topicIds: event.target.checked ? [...draft.topicIds, topic.id] : draft.topicIds.filter((id) => id !== topic.id) })} />{topic.name}</label>)}{!snapshot?.topics.length && <p className={styles.muted}>Тегов пока нет.</p>}</fieldset></details>
+        {feedback}
+      </form> : <form id="dictionary-editor" className={styles.form} onSubmit={submitTopic}><FormField id="topic-name" label="Название тега" value={topicName} onChange={(event) => setTopicName(event.target.value)} required maxLength={80} disabled={busy} />{feedback}</form>}
     </Modal>}
     {canEdit && confirmation && <Modal key="confirmation" title="Подтвердите изменение словаря" closeLabel="Отмена" focusCancel busy={busy} onClose={() => { setConfirmation(null); setError(null) }}>
       <p>Это изменит словарь для всех профилей.</p>{confirmation.reasons.map((reason) => <p key={reason}>{reason}</p>)}

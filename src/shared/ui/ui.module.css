@@ -1,6 +1,8 @@
 .button { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 44px; padding: 11px 18px; border-radius: var(--radius-control); border: 1px solid transparent; font: inherit; font-weight: 600; cursor: pointer; }
 .primary { color: var(--on-accent); background: var(--accent); }
-.primary:hover { background: var(--accent-hover); }
+@media (hover: hover) and (pointer: fine) {
+.primary:hover:not(:disabled) { background: var(--accent-hover); }
+}
 .secondary { color: var(--text); background: var(--surface-muted); border-color: var(--border); }
 .destructive { color: var(--on-error); background: var(--error); }
 .button:disabled { opacity: .6; cursor: not-allowed; }
@@ -12,7 +14,12 @@
 .empty p { color: var(--text-muted); margin: 0 0 24px; line-height: 1.7; }
 .field { display: grid; gap: 8px; color: var(--text-muted); font-size: calc(14px + var(--font-offset)); }
 .field input { min-width: 0; width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-control); background: var(--surface); color: var(--text); font: inherit; min-height: 44px; }
-.modal { width: min(480px, calc(100% - 32px)); padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--surface); color: var(--text); }
+.modal { width: min(480px, calc(100% - 32px)); max-height: calc(100dvh - 32px); padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--surface); color: var(--text); }
+.modal[open] { display: flex; flex-direction: column; }
+.modal > h2 { flex-shrink: 0; margin: 0; padding: 24px 24px 8px; font-size: calc(24px + var(--font-offset)); }
+.modalBody { min-height: 0; overflow-y: auto; padding: 8px 24px 20px; scroll-padding-block: 12px; }
+.modalBody > p:first-child { margin-top: 0; }
+.modalFooter { flex-shrink: 0; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; padding: 16px 24px; border-top: 1px solid var(--border); background: var(--surface); }
 .modal::backdrop { background: rgb(10 20 40 / 50%); }
 .modal p { line-height: 1.7; color: var(--text-muted); }
 
@@ -25,9 +32,16 @@
 
 :global(:root[data-style]) .card { border-color: var(--card-border); padding: clamp(22px, 2.5vw, 32px); }
 :global(:root[data-style]) .card h2 { letter-spacing: -.35px; }
-:global(:root[data-style]) .button { transition: background-color .18s ease, box-shadow .18s ease, transform .18s ease; }
-:global(:root[data-style]) .primary { box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 18%, transparent); }
-:global(:root[data-style]) .button:hover:not(:disabled) { transform: translateY(-1px); }
+:global(:root[data-style]) .button { transition: background-color .12s ease, transform .12s cubic-bezier(0.23, 1, 0.32, 1); }
+:global(:root[data-style]) .primary { box-shadow: none; }
+:global(:root[data-style]) .button:active:not(:disabled):not(:focus-visible) { transform: scale(.98); }
+:global(:root[data-style]) .primary:active:not(:disabled) { background: var(--accent-hover); }
+:global(:root[data-style]) .secondary:active:not(:disabled) { background: var(--selected); }
+:global(:root[data-style]) .button:focus-visible { transition: none; }
+:global(:root[data-style]) .button.iconButton { border-color: transparent; background: transparent; box-shadow: none; }
+@media (hover: hover) and (pointer: fine) {
+  :global(:root[data-style]) .iconButton:hover:not(:disabled) { background: var(--surface-muted); }
+}
 :global(:root[data-style]) .secondary { background: var(--surface); }
 :global(:root[data-style]) .field input { background: var(--surface-muted); }
 
@@ -37,10 +51,13 @@
 :global(:root[data-style="retro"]) .field input { background: var(--surface); border-bottom-width: 2px; }
 :global(:root[data-style="pixel"]) .card { border-width: 2px; }
 :global(:root[data-style="pixel"]) .button { border-width: 2px; box-shadow: 3px 3px 0 var(--card-border); }
-:global(:root[data-style="pixel"]) .button:hover:not(:disabled) { transform: translate(-1px, -1px); }
-:global(:root[data-style="pixel"]) .button:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: none; }
+:global(:root[data-style="pixel"]) .button:active:not(:disabled):not(:focus-visible) { transform: translate(2px, 2px); box-shadow: none; }
 :global(:root[data-style="pixel"]) .field input { border-width: 2px; background: var(--surface); }
 :global(:root[data-style="pixel"]) .avatar { border-radius: 0; border-width: 2px; }
 :global(:root[data-style="orient"]) .card { background-image: linear-gradient(135deg, color-mix(in srgb, var(--accent) 15%, transparent) 0 20px, transparent 20px); background-repeat: no-repeat; }
 :global(:root[data-style="orient"]) .card h2 { padding-left: 14px; border-left: 2px solid var(--accent); }
 :global(:root[data-style="orient"]) .primary { box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--on-accent) 25%, transparent); }
+
+@media (prefers-reduced-motion: reduce) {
+  :global(:root[data-style]) .button:active:not(:disabled):not(:focus-visible) { transform: none; }
+}

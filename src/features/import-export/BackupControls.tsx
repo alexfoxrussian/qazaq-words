@@ -47,10 +47,10 @@ export function BackupControls() {
     } catch (cause) { setError(dataErrorMessage(cause)) }
     finally { lock.current = false; setBusy(false) }
   }
-  const feedback = <>{error && <p role="alert" className={styles.error}>{error}</p>}<p role="status" className={styles.muted}>{message}</p></>
+  const feedback = <>{error && <p role="alert" className={styles.error}>{error}</p>}{message && <p role="status" className={styles.muted}>{message}</p>}</>
   return <>
     <p className={styles.muted}>Полная копия всех профилей, слов, тегов, прогресса, истории и настроек. Файл до 25 MiB. Данные обрабатываются на этом устройстве.</p>
-    {!preview && feedback}<div className={styles.actions}><Button variant="secondary" disabled={busy} onClick={() => void exportBackup()}>Экспортировать backup</Button><Button variant="secondary" disabled={busy} onClick={() => input.current?.click()}>Восстановить из backup</Button></div>
+    {!preview && feedback}<div className={styles.actions}><Button variant="secondary" disabled={busy} onClick={() => void exportBackup()}>Скачать резервную копию</Button><Button variant="secondary" disabled={busy} onClick={() => input.current?.click()}>Восстановить из файла</Button></div>
     <input ref={input} type="file" accept=".json,application/json" hidden onChange={(event) => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void read(file) }} />
     {preview && <Modal title="Заменить все локальные данные?" closeLabel="Отмена" focusCancel busy={busy} onClose={() => { setPreview(null); setError(null) }}>
       <p>В копии: профилей {preview.data.profiles.length}, слов {preview.data.words.length}, тегов {preview.data.topics.length}, ответов {preview.data.answers.length}, сеансов {preview.data.sessions.length}. Дата: {new Date(preview.exportedAt).toLocaleString('ru-RU')}.</p>

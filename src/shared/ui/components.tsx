@@ -27,16 +27,21 @@ export function FormField({ label, id, ...props }: InputHTMLAttributes<HTMLInput
   return <label className={styles.field} htmlFor={id}><span>{label}</span><input id={id} {...props} /></label>
 }
 
-export function Modal({ title, children, onClose, closeLabel = 'Понятно', busy = false, focusCancel = false }: { title: string; children: ReactNode; onClose: () => void; closeLabel?: string; busy?: boolean; focusCancel?: boolean }) {
+export function Modal({ title, children, footer, onClose, closeLabel = 'Понятно', busy = false, focusCancel = false, getReturnFocus }: { title: string; children: ReactNode; footer?: ReactNode; onClose: () => void; closeLabel?: string; busy?: boolean; focusCancel?: boolean; getReturnFocus?: () => HTMLElement | null }) {
   const ref = useRef<HTMLDialogElement>(null)
   useEffect(() => {
     const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null
     const dialog = ref.current
     dialog?.showModal()
     if (focusCancel) dialog?.querySelector<HTMLButtonElement>('[data-modal-close]')?.focus()
-    return () => { dialog?.close(); trigger?.focus() }
-  }, [focusCancel])
+    return () => {
+      dialog?.close()
+      // A successful action may replace the trigger with a new result screen.
+      const target = getReturnFocus?.() ?? trigger
+      if (target?.isConnected && !target.matches(':disabled')) target.focus({ preventScroll: true })
+    }
+  }, [focusCancel, getReturnFocus])
   return <dialog ref={ref} className={styles.modal} aria-labelledby="dialog-title" aria-busy={busy} onCancel={(event) => { event.preventDefault(); if (!busy) onClose() }}>
-    <h2 id="dialog-title">{title}</h2>{children}<Button variant="secondary" data-modal-close disabled={busy} onClick={onClose}>{closeLabel}</Button>
+    <h2 id="dialog-title">{title}</h2><div className={styles.modalBody}>{children}</div><div className={styles.modalFooter}>{footer}<Button variant="secondary" data-modal-close disabled={busy} onClick={onClose}>{closeLabel}</Button></div>
   </dialog>
 }

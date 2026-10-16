@@ -1,6 +1,6 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { createBrowserRouter, createRoutesFromElements, Link, NavLink, Outlet, Route, RouterProvider, useLocation } from 'react-router-dom'
-import { BookOpen, ChartNoAxesCombined, House, Settings, Sparkles, UserRound, type LucideIcon } from 'lucide-react'
+import { BookOpen, ChartNoAxesCombined, House, MoreHorizontal, Settings, Sparkles, UserRound, type LucideIcon } from 'lucide-react'
 import { DashboardPage, SettingsPage, StatisticsPage } from '../pages/pages'
 import { TrainingPage } from '../pages/TrainingPage'
 import { AppearanceProvider } from './AppearanceProvider'
@@ -9,7 +9,7 @@ import { DictionaryPage } from '../pages/DictionaryPage'
 import { ProfilePage } from '../pages/ProfilePage'
 import { DataGate } from './DataGate'
 import { useProfileStore } from '../features/profiles/store'
-import { BentoCard, EmptyState } from '../shared/ui/components'
+import { BentoCard, EmptyState, Modal } from '../shared/ui/components'
 import styles from './shell.module.css'
 import { PwaControls } from '../features/pwa/PwaControls'
 
@@ -24,13 +24,16 @@ const navigation: { path: string; label: string; icon: LucideIcon }[] = [
 
 function Shell() {
   const location = useLocation()
+  const [moreOpen, setMoreOpen] = useState(false)
+  const moreActive = ['/profile', '/settings'].includes(location.pathname)
   useLayoutEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }) }, [location.key])
   return <div className={styles.shell}>
     <a className={styles.skip} href="#content">Перейти к содержимому</a>
     <aside className={styles.sidebar}>
       <Link to="/" className={styles.brand}><span className={styles.logo}>Q</span><span>Qazaq Words<small>Казахский каждый день</small></span></Link>
       <nav className={styles.navigation} aria-label="Основная навигация">
-        {navigation.map(({ path, label, icon: Icon }) => <NavLink key={path} to={path} end={path === '/'} className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}><Icon size={20} aria-hidden="true" /><span>{label}</span></NavLink>)}
+        {navigation.map(({ path, label, icon: Icon }, index) => <NavLink key={path} to={path} end={path === '/'} aria-label={label} className={({ isActive }) => `${styles.navLink} ${index >= 4 ? styles.secondaryNav : ''} ${isActive ? styles.active : ''}`}><Icon size={20} aria-hidden="true" /><span className={index === 1 || index === 3 ? styles.longLabel : ''}>{label}</span>{(index === 1 || index === 3) && <span className={styles.shortLabel} aria-hidden="true">{index === 1 ? 'Учить' : 'Итоги'}</span>}</NavLink>)}
+        <button type="button" className={`${styles.navLink} ${styles.moreButton} ${moreActive ? styles.active : ''}`} aria-haspopup="dialog" aria-expanded={moreOpen} onClick={() => setMoreOpen(true)}><MoreHorizontal size={20} aria-hidden="true" /><span>Ещё</span></button>
       </nav>
       <div className={styles.localNote}><span className={styles.dot} />Локальное приложение<p>Ваше обучение — на этом устройстве.</p></div>
     </aside>
@@ -40,12 +43,14 @@ function Shell() {
       <footer className={styles.footer}>Qazaq Words · Локальное обучение</footer>
       <PwaControls />
     </main>
+    {moreOpen && <Modal title="Ещё" closeLabel="Закрыть" onClose={() => setMoreOpen(false)}><nav className={styles.moreLinks} aria-label="Профиль и настройки">{navigation.slice(4).map(({ path, label, icon: Icon }) => <NavLink key={path} to={path} className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`} onClick={() => setMoreOpen(false)}><Icon size={22} aria-hidden="true" /><span>{label}</span></NavLink>)}</nav></Modal>}
   </div>
 }
 
 function RequireProfile() {
   const profile = useProfileStore((state) => state.activeProfile)
-  return profile ? <Outlet /> : <BentoCard title="Войдите в профиль"><EmptyState title="Ваши настройки и статистика" action={<Link to="/profile">Войти или создать профиль →</Link>}>Войдите в локальный профиль, чтобы сохранять результаты и менять оформление.</EmptyState></BentoCard>
+  const isSettings = useLocation().pathname === '/settings'
+  return profile ? <Outlet /> : <><header className={styles.guestHeading}><h1>{isSettings ? 'Настройки' : 'Статистика'}</h1></header><BentoCard title={isSettings ? 'Оформление для вашего профиля' : 'Ваши результаты обучения'}><p>{isSettings ? 'Тема, палитра, стиль и размер текста сохраняются отдельно для каждого профиля.' : 'Профиль сохраняет точность ответов, активность и прогресс слов. Гостевые результаты не записываются.'} Достаточно имени — регистрация не нужна.</p><Link className={styles.profileCta} to="/profile">Выбрать или создать профиль →</Link></BentoCard></>
 }
 
 const router = createBrowserRouter(createRoutesFromElements(<Route element={<Shell />}>

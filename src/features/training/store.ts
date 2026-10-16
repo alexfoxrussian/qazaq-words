@@ -21,7 +21,7 @@ export const useTrainingStore = create<TrainingState>((set) => ({
     const changed = state.profileId !== profileId || state.session?.id !== snapshot.session?.id
     return { ...snapshot, profileId, status: 'ready', error: null,
       view: changed ? (snapshot.session?.status === 'active' ? 'resume' : snapshot.session?.status === 'completed' ? 'session' : 'prepare') : state.view,
-      visibleIndex: changed ? Math.max(0, (snapshot.session?.cursor ?? 0) - 1) : Math.max(state.visibleIndex, (snapshot.session?.cursor ?? 0) - 1),
+      visibleIndex: changed ? (snapshot.session?.status === 'completed' ? snapshot.session.targetCount : snapshot.session && snapshot.session.answeredCount > snapshot.session.cursor ? snapshot.session.cursor : Math.max(0, (snapshot.session?.cursor ?? 0) - 1)) : Math.max(state.visibleIndex, (snapshot.session?.cursor ?? 0) - 1),
     }
   }),
   fail: (error) => set({ status: 'error', error }),
