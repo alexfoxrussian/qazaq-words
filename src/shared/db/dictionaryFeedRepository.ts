@@ -1,6 +1,6 @@
 import type { Topic, Word } from '../../entities/models'
 import { validateDictionaryFile } from '../../entities/word/dictionaryTransfer'
-import { DEFAULT_DICTIONARY_URL, LEGACY_DICTIONARY_URL, linkKey, pairKey, validateFeedState } from '../../entities/word/dictionaryFeed'
+import { linkKey, pairKey, validateFeedState } from '../../entities/word/dictionaryFeed'
 import { normalizeText } from '../utils/text'
 import { createId } from '../utils/id'
 import { database, type QazaqDatabase } from './database'
@@ -13,8 +13,7 @@ export function createDictionaryFeedRepository(db: QazaqDatabase) {
       return db.transaction('rw', [db.words, db.topics, db.appMeta], async () => {
         const metadata = await db.appMeta.get('dictionaryFeed')
         const sameSource = metadata?.key === 'dictionaryFeed' && metadata.value.source === source
-        const replacingLegacy = metadata?.key === 'dictionaryFeed' && metadata.value.source === LEGACY_DICTIONARY_URL && source === DEFAULT_DICTIONARY_URL
-        const previous = metadata?.key === 'dictionaryFeed' && (sameSource || replacingLegacy) ? metadata.value : null
+        const previous = metadata?.key === 'dictionaryFeed' && sameSource ? metadata.value : null
         if (seed && sameSource) return { addedWords: 0, totalWords: await db.words.count() }
         const seenWords = new Set(previous?.seenWords), seenTopics = new Set(previous?.seenTopics), seenLinks = new Set(previous?.seenLinks)
         const topics = new Map((await db.topics.toArray()).map((topic) => [normalizeText(topic.name), topic]))

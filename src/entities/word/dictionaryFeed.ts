@@ -3,7 +3,6 @@ import { ValidationError } from '../../shared/db/errors'
 import { normalizeText } from '../../shared/utils/text'
 
 export const DEFAULT_DICTIONARY_URL = 'https://raw.githubusercontent.com/alexfoxrussian/qazaq-words/main/imports/general-dictionary.json'
-export const LEGACY_DICTIONARY_URL = 'https://raw.githubusercontent.com/alexfoxrussian/qazaq-words/main/imports/user-dictionary.json'
 export const pairKey = (kazakh: string, russian: string) => JSON.stringify([normalizeText(kazakh), normalizeText(russian)])
 export const linkKey = (kazakh: string, russian: string, topic: string) => JSON.stringify([normalizeText(kazakh), normalizeText(russian), normalizeText(topic)])
 
