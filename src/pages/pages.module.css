@@ -1,411 +1,1749 @@
-.heading { margin-bottom: 28px; }
-.eyebrow { color: var(--accent); font-size: calc(11px + var(--font-offset)); letter-spacing: 1.8px; font-weight: 700; }
-.heading h1 { margin: 12px 0; }
-.heading p, .muted { color: var(--text-muted); font-size: calc(14px + var(--font-offset)); line-height: 1.8; }
-.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.wide { grid-column: span 2; }
-.full { grid-column: 1 / -1; }
-.hero { position: relative; overflow: hidden; background: var(--accent); color: var(--on-accent); border-color: transparent; }
-.hero h2 { font-size: clamp(calc(28px + var(--font-offset)), 4vw, calc(42px + var(--font-offset))); margin: 28px 0 16px; line-height: 1.25; letter-spacing: -1px; }
-.hero p { max-width: 330px; line-height: 1.8; font-size: calc(14px + var(--font-offset)); }
-.badge { display: inline-flex; align-items: center; gap: 8px; font-size: calc(12px + var(--font-offset)); }
-.heroLink { display: inline-flex; align-items: center; gap: 12px; background: var(--on-accent); color: var(--accent); padding: 13px 18px; min-height: 44px; margin-top: 16px; border-radius: var(--radius-control); text-decoration: none; font-size: calc(14px + var(--font-offset)); font-weight: 700; }
-.letters { margin-top: 24px; font-size: calc(24px + var(--font-offset)); letter-spacing: 6px; opacity: .7; }
-.metric { font-size: calc(38px + var(--font-offset)); font-weight: 600; }
-.swatches { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
-.swatches span { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: calc(12px + var(--font-offset)); }
-.profileList, .form { display: grid; gap: 16px; }
-.profileRow { padding: 16px 0; border-bottom: 1px solid var(--border); }
-.profileRow h3 { margin: 0; }
-.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-.error { color: var(--error); line-height: 1.7; }
-.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.dictionaryTools { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; margin-bottom: 20px; }
-.selectField { display: grid; gap: 8px; font-size: calc(14px + var(--font-offset)); color: var(--text-muted); }
-.selectField select { width: 100%; min-width: 0; min-height: 44px; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-control); background-color: var(--surface); color: var(--text); }
-.wordRow { border-top: 1px solid var(--border); padding: 20px 0 4px; }
-.wordRow h3 { font-size: calc(22px + var(--font-offset)); margin: 0; }
-.wordRow > p { margin: 8px 0 12px; overflow-wrap: anywhere; }
-.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-.tags span { padding: 4px 10px; border-radius: 8px; background-color: var(--surface-muted); color: var(--text-muted); font-size: calc(12px + var(--font-offset)); overflow-wrap: anywhere; }
-.topicChoices { min-width: 0; border: 1px solid var(--border); border-radius: var(--radius-control); padding: 12px; }
-.topicChoices label { display: flex; align-items: center; gap: 10px; min-height: 44px; overflow-wrap: anywhere; }
-.topicChoices input { width: 20px; height: 20px; flex-shrink: 0; accent-color: var(--accent); }
-@media (max-width: 639px) { .dictionaryTools { grid-template-columns: minmax(0, 1fr); } }
-.questionPane { border-radius: var(--radius-control); }
-.trainingWord { font-size: clamp(calc(32px + var(--font-offset)), 6vw, calc(48px + var(--font-offset))) !important; text-align: center; margin: 32px 0 !important; }
-.progress { width: 100%; height: 12px; accent-color: var(--accent); }
-.options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 24px 0; }
-.answerOption { min-width: 0; min-height: 72px; border: 2px solid var(--border); border-radius: var(--radius-control); background-color: var(--surface-muted); color: var(--text); padding: 18px; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
-.answerOption small { display: block; margin-top: 8px; }
-@media (hover: hover) and (pointer: fine) {
-.answerOption:hover:not(:disabled) { border-color: var(--accent); background: var(--selected); }
+.heading {
+    margin-bottom: 28px;
 }
-.answerOption:disabled { cursor: default; }
-.correctOption { border: 2px solid var(--success); }
-.incorrectOption { border: 2px solid var(--error); }
-.correctText { color: var(--success); line-height: 1.7; }
-@media (max-width: 639px) { .options { grid-template-columns: minmax(0, 1fr); gap: 12px; } }
-@media (min-width: 640px) and (max-width: 1023px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 639px) { .grid { grid-template-columns: minmax(0, 1fr); gap: 16px; } .wide { grid-column: auto; } }
-
-.activityChart { display: block; width: 100%; height: auto; margin: 20px 0; }
-.tableScroll { max-width: 100%; overflow-x: auto; }
-.dataTable { width: 100%; border-collapse: collapse; text-align: left; }
-.dataTable th, .dataTable td { padding: 12px 8px; border-bottom: 1px solid var(--border); }
-.stageList { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.stageList > div { display: grid; gap: 8px; }
-.stageList progress { width: 100%; accent-color: var(--accent); }
-.answerHistory { list-style: none; padding: 0; }
-.answerHistory li { display: grid; gap: 6px; padding: 16px 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
-.answerHistory time { color: var(--text-muted); font-size: calc(12px + var(--font-offset)); }
-@media (max-width: 639px) { .stageList { grid-template-columns: minmax(0, 1fr); } }
-
-.wordRow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; align-items: center; gap: 10px 16px; padding: 16px 0; }
-.wordRow h3 { font-size: calc(18px + var(--font-offset)); }
-.wordRow > p { margin: 0; }
-.wordRow .actions { grid-column: 3; grid-row: 1; flex-wrap: nowrap; margin: 0; }
-.wordRow .tags { grid-column: 1 / 3; margin: 0; }
-.wordRow .tags:empty { display: none; }
-.topicRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--border); }
-.topicRow h3 { margin: 0; min-width: 0; }
-.topicRow .actions { flex-wrap: nowrap; margin: 0; }
-@media (max-width: 1023px) { .wordRow { grid-template-columns: minmax(0, 1fr) auto; } .wordRow > p { grid-column: 1; } .wordRow .actions { grid-column: 2; grid-row: 1 / 3; } .wordRow .tags { grid-column: 1 / -1; } }
-
-.activityCalendar { display: grid; grid-template-rows: repeat(7, 18px); grid-auto-flow: column; grid-auto-columns: 18px; gap: 5px; width: max-content; padding: 8px; margin: 8px 0; }
-.activityDay { display: block; width: 18px; height: 18px; border: 1px solid var(--border); border-radius: 3px; background-color: var(--surface-muted); }
-.activityDay[data-level="1"] { background: color-mix(in srgb, var(--accent) 25%, var(--surface)); }
-.activityDay[data-level="2"] { background: color-mix(in srgb, var(--accent) 50%, var(--surface)); }
-.activityDay[data-level="3"] { background: color-mix(in srgb, var(--accent) 75%, var(--surface)); }
-.activityDay[data-level="4"] { background: var(--accent); }
-.activityLegend { display: flex; align-items: center; justify-content: flex-end; gap: 5px; margin: 12px 0 20px; color: var(--text-muted); font-size: calc(12px + var(--font-offset)); }
-
-
-.profileIdentity { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-.profileIdentity > div { min-width: 0; }
-.profileIdentity p { margin: 8px 0 0; }
-.profilePhoto { width: 64px; height: 64px; }
-
-/* Shared composition for all four visual styles. */
-.newOnly { display: none; }
-:global(:root[data-style]) .newOnly { display: block; }
-:global(:root[data-style]) .heading { margin-bottom: 28px; }
-:global(:root[data-style]) .heading h1 { font-size: clamp(calc(28px + var(--font-offset)), 3vw, calc(40px + var(--font-offset))); letter-spacing: -1.2px; }
-:global(:root[data-style]) .eyebrow { display: inline-flex; align-items: center; gap: 8px; letter-spacing: 1.4px; }
-:global(:root[data-style]) .eyebrow::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-:global(:root[data-style]) .hero { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(100px, 1fr); gap: 32px; align-items: center; background: var(--surface); color: var(--text); border-color: var(--card-border); box-shadow: none; }
-:global(:root[data-style]) .heroBody { min-width: 0; }
-:global(:root[data-style]) .hero h2 { font-size: clamp(calc(28px + var(--font-offset)), 3.2vw, calc(42px + var(--font-offset))); line-height: 1.12; margin: 22px 0 14px; }
-:global(:root[data-style]) .hero p { color: var(--text-muted); max-width: 390px; }
-:global(:root[data-style]) .badge { color: var(--accent); padding: 7px 10px; background: var(--selected); border-radius: var(--radius-chip); }
-:global(:root[data-style]) .heroLink { color: var(--on-accent); background: var(--accent); box-shadow: none; margin-top: 10px; }
-@media (hover: hover) and (pointer: fine) {
-:global(:root[data-style]) .heroLink:hover { background: var(--accent-hover); }
+.eyebrow {
+    color: var(--accent);
+    font-size: calc(11px + var(--font-offset));
+    letter-spacing: 1.8px;
+    font-weight: 700;
 }
-:global(:root[data-style]) .letters { display: none; }
-:global(:root[data-style]) .learningOverview { position: relative; background-color: var(--surface); }
-.overviewIcon { position: absolute; top: 24px; right: 24px; display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--radius-control); color: var(--accent); background: var(--selected); }
-:global(:root[data-style]) .learningOverview h2 { padding-right: 50px; }
-:global(:root[data-style]) .learningOverview .metric { display: block; font-size: calc(56px + var(--font-offset)); margin-top: 22px; }
-:global(:root[data-style]) .learningOverview > p { margin: 4px 0 26px; }
-.overviewProgress { display: flex; justify-content: space-between; gap: 10px; color: var(--text-muted); font-size: calc(12px + var(--font-offset)); margin-bottom: 10px; }
-:global(:root[data-style]) .learningOverview > a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 16px; font-size: calc(14px + var(--font-offset)); }
-:global(:root[data-style]) .metricCard { position: relative; }
-:global(:root[data-style]) .metricCard h2 { padding-right: 40px; color: var(--text-muted); font-size: calc(14px + var(--font-offset)); font-weight: 500; }
-:global(:root[data-style]) .metricIcon { display: grid; place-items: center; position: absolute; top: 22px; right: 22px; width: 36px; height: 36px; color: var(--accent); background: var(--selected); border-radius: var(--radius-control); }
-:global(:root[data-style]) .metricCard > a { display: inline-flex; align-items: center; min-height: 44px; font-size: calc(14px + var(--font-offset)); }
-:global(:root[data-style]) .wordRow { padding: 12px 0; margin: 0; border-color: var(--card-border); border-radius: 0; transition: background-color .18s ease; }
-:global(:root[data-style]) .wordRow h3 { color: var(--text); font-size: calc(18px + var(--font-offset)); }
-:global(:root[data-style]) .wordRow > p { color: var(--text-muted); font-size: calc(14px + var(--font-offset)); }
-:global(:root[data-style]) .tags { gap: 5px; }
-:global(:root[data-style]) .tags span { border-radius: 0; padding: 0; background: transparent; font-size: calc(11px + var(--font-offset)); }
-:global(:root[data-style]) .tags span + span::before { content: '·'; margin-right: 5px; }
-:global(:root[data-style]) .topicRow { border-color: var(--card-border); }
-:global(:root[data-style]) .topicRow h3 { font-size: calc(14px + var(--font-offset)); }
-:global(:root[data-style]) .selectField select { background-color: var(--surface-muted); }
-:global(:root[data-style]) .prepareCard { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 20px; border-top: 3px solid var(--accent); }
-:global(:root[data-style]) .prepareCard > :not(label) { grid-column: 1 / -1; margin-top: 0; margin-bottom: 0; }
-:global(:root[data-style]) .prepareCard .actions { padding-top: 8px; }
-:global(:root[data-style]) .trainingCard { max-width: 900px; margin-inline: auto; box-shadow: none; }
-:global(:root[data-style]) .languageLabel { text-align: center; font-size: calc(11px + var(--font-offset)); letter-spacing: 1px; color: var(--text-muted); margin: 16px 0 0; }
-:global(:root[data-style]) .trainingWord { margin: 8px 0 20px !important; padding: 8px 0; border: 0; border-radius: 0; background: transparent; font-size: clamp(calc(32px + var(--font-offset)), 5vw, calc(56px + var(--font-offset))) !important; }
-:global(:root[data-style]) .progress { height: 8px; border: 0; border-radius: var(--radius-chip); overflow: hidden; }
-:global(:root[data-style]) .answerOption { display: grid; grid-template-columns: 28px minmax(0, 1fr); align-items: center; column-gap: 12px; min-height: 80px; padding: 12px 16px; border-width: 1px; background-color: var(--surface); transition: none; }
-:global(:root[data-style]) .optionNumber { display: grid; place-items: center; width: 28px; height: 28px; grid-row: 1 / 3; color: var(--text-muted); background: transparent; font-size: calc(13px + var(--font-offset)); font-weight: 500; }
-:global(:root[data-style]) .optionDot { display: none; }
-:global(:root[data-style]) .answerOption small { grid-column: 2; }
-@media (hover: hover) and (pointer: fine) {
-:global(:root[data-style]) .answerOption:hover:not(:disabled) { border-color: var(--accent); background: var(--selected); }
+.heading h1 {
+    margin: 12px 0;
 }
-:global(:root[data-style]) .correctOption { background: color-mix(in srgb, var(--success) 10%, var(--surface)); }
-:global(:root[data-style]) .incorrectOption { background: color-mix(in srgb, var(--error) 10%, var(--surface)); }
-@media (min-width: 1024px) {
-  :global(:root[data-style]) .dashboardGrid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-  :global(:root[data-style]) .dashboardGrid .hero { grid-column: span 8; }
-  :global(:root[data-style]) .learningOverview { grid-column: span 4; }
-  :global(:root[data-style]) .metricCard { grid-column: span 4; }
+.heading p,
+.muted {
+    color: var(--text-muted);
+    font-size: calc(14px + var(--font-offset));
+    line-height: 1.8;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+.wide {
+    grid-column: span 2;
+}
+.full {
+    grid-column: 1 / -1;
+}
+.hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--accent);
+    color: var(--on-accent);
+    border-color: transparent;
+}
+.hero h2 {
+    font-size: clamp(calc(28px + var(--font-offset)), 4vw, calc(42px + var(--font-offset)));
+    margin: 28px 0 16px;
+    line-height: 1.25;
+    letter-spacing: -1px;
+}
+.hero p {
+    max-width: 330px;
+    line-height: 1.8;
+    font-size: calc(14px + var(--font-offset));
+}
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: calc(12px + var(--font-offset));
+}
+.heroLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--on-accent);
+    color: var(--accent);
+    padding: 13px 18px;
+    min-height: 44px;
+    margin-top: 16px;
+    border-radius: var(--radius-control);
+    text-decoration: none;
+    font-size: calc(14px + var(--font-offset));
+    font-weight: 700;
+}
+.letters {
+    margin-top: 24px;
+    font-size: calc(24px + var(--font-offset));
+    letter-spacing: 6px;
+    opacity: 0.7;
+}
+.metric {
+    font-size: calc(38px + var(--font-offset));
+    font-weight: 600;
+}
+.swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+}
+.swatches span {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: calc(12px + var(--font-offset));
+}
+.profileList,
+.form {
+    display: grid;
+    gap: 16px;
+}
+.profileRow {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+}
+.profileRow h3 {
+    margin: 0;
+}
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.error {
+    color: var(--error);
+    line-height: 1.7;
+}
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+.dictionaryTools {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.selectField {
+    display: grid;
+    gap: 8px;
+    font-size: calc(14px + var(--font-offset));
+    color: var(--text-muted);
+}
+.selectField select {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    background-color: var(--surface);
+    color: var(--text);
+}
+.wordRow {
+    border-top: 1px solid var(--border);
+    padding: 20px 0 4px;
+}
+.wordRow h3 {
+    font-size: calc(22px + var(--font-offset));
+    margin: 0;
+}
+.wordRow > p {
+    margin: 8px 0 12px;
+    overflow-wrap: anywhere;
+}
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.tags span {
+    padding: 4px 10px;
+    border-radius: 8px;
+    background-color: var(--surface-muted);
+    color: var(--text-muted);
+    font-size: calc(12px + var(--font-offset));
+    overflow-wrap: anywhere;
+}
+.topicChoices {
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    padding: 12px;
+}
+.topicChoices label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    overflow-wrap: anywhere;
+}
+.topicChoices input {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    accent-color: var(--accent);
+}
+@media (max-width: 639px) {
+    .dictionaryTools {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+.questionPane {
+    border-radius: var(--radius-control);
+}
+.trainingWord {
+    font-size: clamp(
+        calc(32px + var(--font-offset)),
+        6vw,
+        calc(48px + var(--font-offset))
+    ) !important;
+    text-align: center;
+    margin: 32px 0 !important;
+}
+.progress {
+    width: 100%;
+    height: 12px;
+    accent-color: var(--accent);
+}
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+}
+.answerOption {
+    min-width: 0;
+    min-height: 72px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-control);
+    background-color: var(--surface-muted);
+    color: var(--text);
+    padding: 18px;
+    text-align: left;
+    cursor: pointer;
+    overflow-wrap: anywhere;
+}
+.answerOption small {
+    display: block;
+    margin-top: 8px;
+}
+@media (hover: hover) and (pointer: fine) {
+    .answerOption:hover:not(:disabled) {
+        border-color: var(--accent);
+        background: var(--selected);
+    }
+}
+.answerOption:disabled {
+    cursor: default;
+}
+.correctOption {
+    border: 2px solid var(--success);
+}
+.incorrectOption {
+    border: 2px solid var(--error);
+}
+.correctText {
+    color: var(--success);
+    line-height: 1.7;
+}
+@media (max-width: 639px) {
+    .options {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
 }
 @media (min-width: 640px) and (max-width: 1023px) {
-  :global(:root[data-style]) .learningOverview { grid-column: 1 / -1; }
-  :global(:root[data-style]) .metricCard:last-child { grid-column: 1 / -1; }
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 @media (max-width: 639px) {
-  :global(:root[data-style]) .hero { grid-template-columns: minmax(0, 1fr); }
-  :global(:root[data-style]) .prepareCard { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-  :global(:root[data-style]) .overviewProgress { flex-wrap: wrap; }
+    .grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+    .wide {
+        grid-column: auto;
+    }
 }
 
-:global(:root[data-style]) .progress::-webkit-progress-bar { background-color: var(--surface-muted); border-radius: var(--radius-chip); }
-:global(:root[data-style]) .progress::-webkit-progress-value { background: var(--accent); border-radius: var(--radius-chip); }
-:global(:root[data-style]) .progress::-moz-progress-bar { background: var(--accent); border-radius: var(--radius-chip); }
+.activityChart {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 20px 0;
+}
+.tableScroll {
+    max-width: 100%;
+    overflow-x: auto;
+}
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+.dataTable th,
+.dataTable td {
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--border);
+}
+.stageList {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+.stageList > div {
+    display: grid;
+    gap: 8px;
+}
+.stageList progress {
+    width: 100%;
+    accent-color: var(--accent);
+}
+.answerHistory {
+    list-style: none;
+    padding: 0;
+}
+.answerHistory li {
+    display: grid;
+    gap: 6px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    overflow-wrap: anywhere;
+}
+.answerHistory time {
+    color: var(--text-muted);
+    font-size: calc(12px + var(--font-offset));
+}
+@media (max-width: 639px) {
+    .stageList {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.wordRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px 16px;
+    padding: 16px 0;
+}
+.wordRow h3 {
+    font-size: calc(18px + var(--font-offset));
+}
+.wordRow > p {
+    margin: 0;
+}
+.wordRow .actions {
+    grid-column: 3;
+    grid-row: 1;
+    flex-wrap: nowrap;
+    margin: 0;
+}
+.wordRow .tags {
+    grid-column: 1 / 3;
+    margin: 0;
+}
+.wordRow .tags:empty {
+    display: none;
+}
+.topicRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+}
+.topicRow h3 {
+    margin: 0;
+    min-width: 0;
+}
+.topicRow .actions {
+    flex-wrap: nowrap;
+    margin: 0;
+}
+@media (max-width: 1023px) {
+    .wordRow {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .wordRow > p {
+        grid-column: 1;
+    }
+    .wordRow .actions {
+        grid-column: 2;
+        grid-row: 1 / 3;
+    }
+    .wordRow .tags {
+        grid-column: 1 / -1;
+    }
+}
+
+.activityCalendar {
+    display: grid;
+    grid-template-rows: repeat(7, 18px);
+    grid-auto-flow: column;
+    grid-auto-columns: 18px;
+    gap: 5px;
+    width: max-content;
+    padding: 8px;
+    margin: 8px 0;
+}
+.activityDay {
+    display: block;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background-color: var(--surface-muted);
+}
+.activityDay[data-level='1'] {
+    background: color-mix(in srgb, var(--accent) 25%, var(--surface));
+}
+.activityDay[data-level='2'] {
+    background: color-mix(in srgb, var(--accent) 50%, var(--surface));
+}
+.activityDay[data-level='3'] {
+    background: color-mix(in srgb, var(--accent) 75%, var(--surface));
+}
+.activityDay[data-level='4'] {
+    background: var(--accent);
+}
+.activityLegend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    margin: 12px 0 20px;
+    color: var(--text-muted);
+    font-size: calc(12px + var(--font-offset));
+}
+
+.profileIdentity {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.profileIdentity > div {
+    min-width: 0;
+}
+.profileIdentity p {
+    margin: 8px 0 0;
+}
+.profilePhoto {
+    width: 64px;
+    height: 64px;
+}
+
+/* Shared composition for all four visual styles. */
+.newOnly {
+    display: none;
+}
+:global(:root[data-style]) .newOnly {
+    display: block;
+}
+:global(:root[data-style]) .heading {
+    margin-bottom: 28px;
+}
+:global(:root[data-style]) .heading h1 {
+    font-size: clamp(calc(28px + var(--font-offset)), 3vw, calc(40px + var(--font-offset)));
+    letter-spacing: -1.2px;
+}
+:global(:root[data-style]) .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 1.4px;
+}
+:global(:root[data-style]) .eyebrow::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+:global(:root[data-style]) .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(100px, 1fr);
+    gap: 32px;
+    align-items: center;
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--card-border);
+    box-shadow: none;
+}
+:global(:root[data-style]) .heroBody {
+    min-width: 0;
+}
+:global(:root[data-style]) .hero h2 {
+    font-size: clamp(calc(28px + var(--font-offset)), 3.2vw, calc(42px + var(--font-offset)));
+    line-height: 1.12;
+    margin: 22px 0 14px;
+}
+:global(:root[data-style]) .hero p {
+    color: var(--text-muted);
+    max-width: 390px;
+}
+:global(:root[data-style]) .badge {
+    color: var(--accent);
+    padding: 7px 10px;
+    background: var(--selected);
+    border-radius: var(--radius-chip);
+}
+:global(:root[data-style]) .heroLink {
+    color: var(--on-accent);
+    background: var(--accent);
+    box-shadow: none;
+    margin-top: 10px;
+}
+@media (hover: hover) and (pointer: fine) {
+    :global(:root[data-style]) .heroLink:hover {
+        background: var(--accent-hover);
+    }
+}
+:global(:root[data-style]) .letters {
+    display: none;
+}
+:global(:root[data-style]) .learningOverview {
+    position: relative;
+    background-color: var(--surface);
+}
+.overviewIcon {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-control);
+    color: var(--accent);
+    background: var(--selected);
+}
+:global(:root[data-style]) .learningOverview h2 {
+    padding-right: 50px;
+}
+:global(:root[data-style]) .learningOverview .metric {
+    display: block;
+    font-size: calc(56px + var(--font-offset));
+    margin-top: 22px;
+}
+:global(:root[data-style]) .learningOverview > p {
+    margin: 4px 0 26px;
+}
+.overviewProgress {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: calc(12px + var(--font-offset));
+    margin-bottom: 10px;
+}
+:global(:root[data-style]) .learningOverview > a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-top: 16px;
+    font-size: calc(14px + var(--font-offset));
+}
+:global(:root[data-style]) .metricCard {
+    position: relative;
+}
+:global(:root[data-style]) .metricCard h2 {
+    padding-right: 40px;
+    color: var(--text-muted);
+    font-size: calc(14px + var(--font-offset));
+    font-weight: 500;
+}
+:global(:root[data-style]) .metricIcon {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    width: 36px;
+    height: 36px;
+    color: var(--accent);
+    background: var(--selected);
+    border-radius: var(--radius-control);
+}
+:global(:root[data-style]) .metricCard > a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: calc(14px + var(--font-offset));
+}
+:global(:root[data-style]) .wordRow {
+    padding: 12px 0;
+    margin: 0;
+    border-color: var(--card-border);
+    border-radius: 0;
+    transition: background-color 0.18s ease;
+}
+:global(:root[data-style]) .wordRow h3 {
+    color: var(--text);
+    font-size: calc(18px + var(--font-offset));
+}
+:global(:root[data-style]) .wordRow > p {
+    color: var(--text-muted);
+    font-size: calc(14px + var(--font-offset));
+}
+:global(:root[data-style]) .tags {
+    gap: 5px;
+}
+:global(:root[data-style]) .tags span {
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    font-size: calc(11px + var(--font-offset));
+}
+:global(:root[data-style]) .tags span + span::before {
+    content: '·';
+    margin-right: 5px;
+}
+:global(:root[data-style]) .topicRow {
+    border-color: var(--card-border);
+}
+:global(:root[data-style]) .topicRow h3 {
+    font-size: calc(14px + var(--font-offset));
+}
+:global(:root[data-style]) .selectField select {
+    background-color: var(--surface-muted);
+}
+:global(:root[data-style]) .prepareCard {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 20px;
+    border-top: 3px solid var(--accent);
+}
+:global(:root[data-style]) .prepareCard > :not(label) {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+:global(:root[data-style]) .prepareCard .actions {
+    padding-top: 8px;
+}
+:global(:root[data-style]) .trainingCard {
+    max-width: 900px;
+    margin-inline: auto;
+    box-shadow: none;
+}
+:global(:root[data-style]) .languageLabel {
+    text-align: center;
+    font-size: calc(11px + var(--font-offset));
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin: 16px 0 0;
+}
+:global(:root[data-style]) .trainingWord {
+    margin: 8px 0 20px !important;
+    padding: 8px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    font-size: clamp(
+        calc(32px + var(--font-offset)),
+        5vw,
+        calc(56px + var(--font-offset))
+    ) !important;
+}
+:global(:root[data-style]) .progress {
+    height: 8px;
+    border: 0;
+    border-radius: var(--radius-chip);
+    overflow: hidden;
+}
+:global(:root[data-style]) .answerOption {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 12px;
+    min-height: 80px;
+    padding: 12px 16px;
+    border-width: 1px;
+    background-color: var(--surface);
+    transition: none;
+}
+:global(:root[data-style]) .optionNumber {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    grid-row: 1 / 3;
+    color: var(--text-muted);
+    background: transparent;
+    font-size: calc(13px + var(--font-offset));
+    font-weight: 500;
+}
+:global(:root[data-style]) .optionDot {
+    display: none;
+}
+:global(:root[data-style]) .answerOption small {
+    grid-column: 2;
+}
+@media (hover: hover) and (pointer: fine) {
+    :global(:root[data-style]) .answerOption:hover:not(:disabled) {
+        border-color: var(--accent);
+        background: var(--selected);
+    }
+}
+:global(:root[data-style]) .correctOption {
+    background: color-mix(in srgb, var(--success) 10%, var(--surface));
+}
+:global(:root[data-style]) .incorrectOption {
+    background: color-mix(in srgb, var(--error) 10%, var(--surface));
+}
+@media (min-width: 1024px) {
+    :global(:root[data-style]) .dashboardGrid {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    :global(:root[data-style]) .dashboardGrid .hero {
+        grid-column: span 8;
+    }
+    :global(:root[data-style]) .learningOverview {
+        grid-column: span 4;
+    }
+    :global(:root[data-style]) .metricCard {
+        grid-column: span 4;
+    }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+    :global(:root[data-style]) .learningOverview {
+        grid-column: 1 / -1;
+    }
+    :global(:root[data-style]) .metricCard:last-child {
+        grid-column: 1 / -1;
+    }
+}
+@media (max-width: 639px) {
+    :global(:root[data-style]) .hero {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    :global(:root[data-style]) .prepareCard {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+    :global(:root[data-style]) .overviewProgress {
+        flex-wrap: wrap;
+    }
+}
+
+:global(:root[data-style]) .progress::-webkit-progress-bar {
+    background-color: var(--surface-muted);
+    border-radius: var(--radius-chip);
+}
+:global(:root[data-style]) .progress::-webkit-progress-value {
+    background: var(--accent);
+    border-radius: var(--radius-chip);
+}
+:global(:root[data-style]) .progress::-moz-progress-bar {
+    background: var(--accent);
+    border-radius: var(--radius-chip);
+}
 
 /* Shared page composition. */
-:global(:root[data-style]) .dictionaryLayout { display: flex; flex-direction: column; gap: 20px; }
-:global(:root[data-style]) .dictionaryLayout > .grid { order: 0; align-items: start; }
-:global(:root[data-style]) .dictionaryTools { padding: 16px; border-radius: var(--radius-control); background-color: var(--surface-muted); margin-bottom: 16px; }
-:global(:root[data-style]) .dictionaryTools input, :global(:root[data-style]) .dictionaryTools select { background-color: var(--surface); }
-:global(:root[data-style]) .wordColumns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 96px; gap: 16px; padding: 10px 0; margin: 0; color: var(--text-muted); font-size: calc(12px + var(--font-offset)); }
-:global(:root[data-style]) .wordColumns > :last-child { text-align: center; }
-:global(:root[data-style]) .topicName { min-width: 0; }
-:global(:root[data-style]) .topicCount { margin-top: 6px; color: var(--text-muted); font-size: calc(12px + var(--font-offset)); }
-:global(:root[data-style]) .periodSwitch { display: inline-flex; gap: 4px; padding: 5px; border: 1px solid var(--card-border); border-radius: var(--radius-control); background-color: var(--surface); margin-bottom: 24px; }
-:global(:root[data-style]) .periodSwitch button { border: 0; box-shadow: none; }
-:global(:root[data-style]) .statisticsGrid { align-items: start; }
-:global(:root[data-style]) .statisticsGrid .metricCard { align-self: stretch; }
-:global(:root[data-style]) .activityPanel { min-height: 320px; }
-:global(:root[data-style]) .activityPanel .tableScroll:first-of-type { border: 1px solid var(--card-border); background-color: var(--surface-muted); border-radius: var(--radius-control); padding: 16px; }
-:global(:root[data-style]) .activityDay { border-color: color-mix(in srgb, var(--border) 50%, var(--surface)); }
-:global(:root[data-style]) .activityDay[data-level="0"] { background-color: var(--surface); }
-:global(:root[data-style]) .stageList { grid-template-columns: minmax(0, 1fr); gap: 10px; }
-:global(:root[data-style]) .stageList > div { grid-template-columns: minmax(0, 1fr) auto; align-items: center; padding: 12px; background-color: var(--surface-muted); border-radius: var(--radius-control); font-size: calc(12px + var(--font-offset)); }
-:global(:root[data-style]) .stageList progress { grid-column: 1 / -1; height: 6px; }
-:global(:root[data-style]) .answerHistory { margin-bottom: 0; }
-:global(:root[data-style]) .answerHistory li { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 8px 20px; padding: 18px 14px; border-color: var(--card-border); border-left: 3px solid var(--error); border-radius: var(--radius-control); margin-bottom: 8px; background: color-mix(in srgb, var(--error) 4%, var(--surface)); }
-:global(:root[data-style]) .answerHistory li[data-correct="true"] { border-left-color: var(--success); background: color-mix(in srgb, var(--success) 4%, var(--surface)); }
-:global(:root[data-style]) .answerHistory li > :nth-child(3) { grid-column: 1 / 3; grid-row: 2; font-size: calc(12px + var(--font-offset)); }
-:global(:root[data-style]) .answerHistory time { grid-column: 3; grid-row: 1 / 3; align-self: center; }
-:global(:root[data-style]) .profileGrid { align-items: start; }
-:global(:root[data-style]) .profileList { gap: 12px; }
-:global(:root[data-style]) .profileRow { border: 1px solid var(--card-border); border-radius: var(--radius-card); padding: 18px; background-color: var(--surface); }
-:global(:root[data-style]) .profileRow[data-active="true"] { border-color: color-mix(in srgb, var(--accent) 55%, var(--surface)); background: color-mix(in srgb, var(--accent) 5%, var(--surface)); }
-:global(:root[data-style]) .profileRow[data-active="true"] .profileIdentity p { color: var(--accent); }
-:global(:root[data-style]) .profileRow .actions { margin-bottom: 0; padding-top: 14px; border-top: 1px solid var(--card-border); }
-:global(:root[data-style]) .profileRow .actions button { font-size: calc(12px + var(--font-offset)); }
-:global(:root[data-style]) .createProfileCard { border-top: 3px solid var(--accent); }
-:global(:root[data-style]) .createProfileCard > p { margin-top: 0; margin-bottom: 24px; }
-:global(:root[data-style]) .appearanceFields { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
-:global(:root[data-style]) .appearanceFields > p { grid-column: 1 / -1; }
-:global(:root[data-style]) .appearanceFields label { padding: 14px; border: 1px solid var(--card-border); border-radius: var(--radius-control); background-color: var(--surface-muted); }
-:global(:root[data-style]) .appearanceFields select { background-color: var(--surface); }
-:global(:root[data-style]) .appearancePreview { background: linear-gradient(140deg, var(--surface), var(--selected)); }
-.previewBadge { display: inline-block; font-size: calc(10px + var(--font-offset)); letter-spacing: 1.6px; color: var(--accent); font-weight: 600; }
-.previewWord { padding: 24px 0; font-size: calc(36px + var(--font-offset)); font-weight: 600; }
-.previewWord span { display: block; margin-top: 6px; color: var(--text-muted); font-size: calc(14px + var(--font-offset)); font-weight: 400; }
-.previewChoices { display: grid; gap: 8px; }
-.previewChoices span { padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-control); background-color: var(--surface); font-size: calc(12px + var(--font-offset)); }
-.previewChoices span:first-child { border-color: var(--accent); color: var(--accent); background: var(--selected); }
-:global(:root[data-style]) .dataPanel { border-left: 3px solid var(--accent); }
-:global(:root[data-style]) .dataPanel > p { max-width: 740px; }
+:global(:root[data-style]) .dictionaryLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+:global(:root[data-style]) .dictionaryLayout > .grid {
+    order: 0;
+    align-items: start;
+}
+:global(:root[data-style]) .dictionaryTools {
+    padding: 16px;
+    border-radius: var(--radius-control);
+    background-color: var(--surface-muted);
+    margin-bottom: 16px;
+}
+:global(:root[data-style]) .dictionaryTools input,
+:global(:root[data-style]) .dictionaryTools select {
+    background-color: var(--surface);
+}
+:global(:root[data-style]) .wordColumns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 96px;
+    gap: 16px;
+    padding: 10px 0;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: calc(12px + var(--font-offset));
+}
+:global(:root[data-style]) .wordColumns > :last-child {
+    text-align: center;
+}
+:global(:root[data-style]) .topicName {
+    min-width: 0;
+}
+:global(:root[data-style]) .topicCount {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: calc(12px + var(--font-offset));
+}
+:global(:root[data-style]) .periodSwitch {
+    display: inline-flex;
+    gap: 4px;
+    padding: 5px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-control);
+    background-color: var(--surface);
+    margin-bottom: 24px;
+}
+:global(:root[data-style]) .periodSwitch button {
+    border: 0;
+    box-shadow: none;
+}
+:global(:root[data-style]) .statisticsGrid {
+    align-items: start;
+}
+:global(:root[data-style]) .statisticsGrid .metricCard {
+    align-self: stretch;
+}
+:global(:root[data-style]) .activityPanel {
+    min-height: 320px;
+}
+:global(:root[data-style]) .activityPanel .tableScroll:first-of-type {
+    border: 1px solid var(--card-border);
+    background-color: var(--surface-muted);
+    border-radius: var(--radius-control);
+    padding: 16px;
+}
+:global(:root[data-style]) .activityDay {
+    border-color: color-mix(in srgb, var(--border) 50%, var(--surface));
+}
+:global(:root[data-style]) .activityDay[data-level='0'] {
+    background-color: var(--surface);
+}
+:global(:root[data-style]) .stageList {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+}
+:global(:root[data-style]) .stageList > div {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 12px;
+    background-color: var(--surface-muted);
+    border-radius: var(--radius-control);
+    font-size: calc(12px + var(--font-offset));
+}
+:global(:root[data-style]) .stageList progress {
+    grid-column: 1 / -1;
+    height: 6px;
+}
+:global(:root[data-style]) .answerHistory {
+    margin-bottom: 0;
+}
+:global(:root[data-style]) .answerHistory li {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    gap: 8px 20px;
+    padding: 18px 14px;
+    border-color: var(--card-border);
+    border-left: 3px solid var(--error);
+    border-radius: var(--radius-control);
+    margin-bottom: 8px;
+    background: color-mix(in srgb, var(--error) 4%, var(--surface));
+}
+:global(:root[data-style]) .answerHistory li[data-correct='true'] {
+    border-left-color: var(--success);
+    background: color-mix(in srgb, var(--success) 4%, var(--surface));
+}
+:global(:root[data-style]) .answerHistory li > :nth-child(3) {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    font-size: calc(12px + var(--font-offset));
+}
+:global(:root[data-style]) .answerHistory time {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    align-self: center;
+}
+:global(:root[data-style]) .profileGrid {
+    align-items: start;
+}
+:global(:root[data-style]) .profileList {
+    gap: 12px;
+}
+:global(:root[data-style]) .profileRow {
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-card);
+    padding: 18px;
+    background-color: var(--surface);
+}
+:global(:root[data-style]) .profileRow[data-active='true'] {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--surface));
+    background: color-mix(in srgb, var(--accent) 5%, var(--surface));
+}
+:global(:root[data-style]) .profileRow[data-active='true'] .profileIdentity p {
+    color: var(--accent);
+}
+:global(:root[data-style]) .profileRow .actions {
+    margin-bottom: 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--card-border);
+}
+:global(:root[data-style]) .profileRow .actions button {
+    font-size: calc(12px + var(--font-offset));
+}
+:global(:root[data-style]) .createProfileCard {
+    border-top: 3px solid var(--accent);
+}
+:global(:root[data-style]) .createProfileCard > p {
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+:global(:root[data-style]) .appearanceFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+:global(:root[data-style]) .appearanceFields > p {
+    grid-column: 1 / -1;
+}
+:global(:root[data-style]) .appearanceFields label {
+    padding: 14px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-control);
+    background-color: var(--surface-muted);
+}
+:global(:root[data-style]) .appearanceFields select {
+    background-color: var(--surface);
+}
+:global(:root[data-style]) .appearancePreview {
+    background: linear-gradient(140deg, var(--surface), var(--selected));
+}
+.previewBadge {
+    display: inline-block;
+    font-size: calc(10px + var(--font-offset));
+    letter-spacing: 1.6px;
+    color: var(--accent);
+    font-weight: 600;
+}
+.previewWord {
+    padding: 24px 0;
+    font-size: calc(36px + var(--font-offset));
+    font-weight: 600;
+}
+.previewWord span {
+    display: block;
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: calc(14px + var(--font-offset));
+    font-weight: 400;
+}
+.previewChoices {
+    display: grid;
+    gap: 8px;
+}
+.previewChoices span {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    background-color: var(--surface);
+    font-size: calc(12px + var(--font-offset));
+}
+.previewChoices span:first-child {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--selected);
+}
+:global(:root[data-style]) .dataPanel {
+    border-left: 3px solid var(--accent);
+}
+:global(:root[data-style]) .dataPanel > p {
+    max-width: 740px;
+}
 @media (min-width: 1024px) {
-  :global(:root[data-style]) .statisticsGrid, :global(:root[data-style]) .settingsGrid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-  :global(:root[data-style]) .statisticsGrid .metricCard { grid-column: span 4; }
-  :global(:root[data-style]) .activityPanel { grid-column: span 8; }
-  :global(:root[data-style]) .studyPanel { grid-column: span 4; }
-  :global(:root[data-style]) .appearanceCard { grid-column: span 8; }
-  :global(:root[data-style]) .appearancePreview { grid-column: span 4; }
+    :global(:root[data-style]) .statisticsGrid,
+    :global(:root[data-style]) .settingsGrid {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    :global(:root[data-style]) .statisticsGrid .metricCard {
+        grid-column: span 4;
+    }
+    :global(:root[data-style]) .activityPanel {
+        grid-column: span 8;
+    }
+    :global(:root[data-style]) .studyPanel {
+        grid-column: span 4;
+    }
+    :global(:root[data-style]) .appearanceCard {
+        grid-column: span 8;
+    }
+    :global(:root[data-style]) .appearancePreview {
+        grid-column: span 4;
+    }
 }
-@media (max-width: 1023px) { :global(:root[data-style]) .wordColumns { display: none; } :global(:root[data-style]) .appearancePreview { grid-column: 1 / -1; } }
+@media (max-width: 1023px) {
+    :global(:root[data-style]) .wordColumns {
+        display: none;
+    }
+    :global(:root[data-style]) .appearancePreview {
+        grid-column: 1 / -1;
+    }
+}
 @media (max-width: 639px) {
-  :global(:root[data-style]) .appearanceFields { grid-template-columns: minmax(0, 1fr); gap: 14px; }
-  :global(:root[data-style]) .periodSwitch { display: flex; }
-  :global(:root[data-style]) .periodSwitch button { flex: 1; min-width: 0; padding: 10px; }
-  :global(:root[data-style]) .answerHistory li { grid-template-columns: minmax(0, 1fr); }
-  :global(:root[data-style]) .answerHistory li > :nth-child(3), :global(:root[data-style]) .answerHistory time { grid-column: 1; grid-row: auto; }
+    :global(:root[data-style]) .appearanceFields {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+    }
+    :global(:root[data-style]) .periodSwitch {
+        display: flex;
+    }
+    :global(:root[data-style]) .periodSwitch button {
+        flex: 1;
+        min-width: 0;
+        padding: 10px;
+    }
+    :global(:root[data-style]) .answerHistory li {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    :global(:root[data-style]) .answerHistory li > :nth-child(3),
+    :global(:root[data-style]) .answerHistory time {
+        grid-column: 1;
+        grid-row: auto;
+    }
 }
 
-.pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
-.pagination p { margin: 0; font-variant-numeric: tabular-nums; }
-.pagination .selectField { display: flex; align-items: center; gap: 10px; }
-.pagination select { width: auto; }
-.pageNavigation { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: calc(14px + var(--font-offset)); }
-.wordList { scroll-margin-top: 24px; }
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+.pagination p {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+}
+.pagination .selectField {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.pagination select {
+    width: auto;
+}
+.pageNavigation {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    font-size: calc(14px + var(--font-offset));
+}
+.wordList {
+    scroll-margin-top: 24px;
+}
 @media (max-width: 639px) {
-  .pagination { display: grid; grid-template-columns: minmax(0, 1fr); }
-  .pagination .selectField { justify-content: space-between; }
-  .pagination select { flex-shrink: 0; width: 88px; }
-  .pageNavigation { width: 100%; display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 8px; }
-  .pageNavigation span { text-align: center; font-variant-numeric: tabular-nums; }
+    .pagination {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .pagination .selectField {
+        justify-content: space-between;
+    }
+    .pagination select {
+        flex-shrink: 0;
+        width: 88px;
+    }
+    .pageNavigation {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) 44px;
+        align-items: center;
+        gap: 8px;
+    }
+    .pageNavigation span {
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
 }
 
-.homeIdentity { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; margin-top: 24px; }
-.homeIdentity > div { flex: 1; min-width: 180px; }
-.hero .homeIdentity h2 { margin: 0 0 16px; overflow-wrap: anywhere; }
-.homePhoto { width: 88px; height: 88px; flex-shrink: 0; }
-.homeIdentity progress { width: 100%; }
-.homeActions { display: flex; flex-wrap: wrap; gap: 12px; }
+.homeIdentity {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    margin-top: 24px;
+}
+.homeIdentity > div {
+    flex: 1;
+    min-width: 180px;
+}
+.hero .homeIdentity h2 {
+    margin: 0 0 16px;
+    overflow-wrap: anywhere;
+}
+.homePhoto {
+    width: 88px;
+    height: 88px;
+    flex-shrink: 0;
+}
+.homeIdentity progress {
+    width: 100%;
+}
+.homeActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
 
-:global(:root[data-style]) .dashboardGrid .hero { grid-column: 1 / -1; }
+:global(:root[data-style]) .dashboardGrid .hero {
+    grid-column: 1 / -1;
+}
 
 /* Distinct visual treatments use the same page components and data. */
-:global(:root[data-style="retro"]) .eyebrow { letter-spacing: 2.4px; }
-:global(:root[data-style="retro"]) .eyebrow::before { border-radius: 0; width: 16px; height: 2px; }
-:global(:root[data-style="retro"]) .hero { background: var(--surface); border-top: 6px double var(--accent); }
-:global(:root[data-style="retro"]) .dictionaryTools, :global(:root[data-style="retro"]) .appearanceFields label { border: 1px dashed var(--card-border); }
-:global(:root[data-style="retro"]) .wordRow h3 { color: var(--text); }
-:global(:root[data-style="retro"]) .trainingWord { background: var(--surface-muted); border-top: 1px solid var(--card-border); border-bottom: 3px double var(--card-border); }
-:global(:root[data-style="retro"]) .optionNumber { border: 1px solid var(--card-border); background: var(--surface); }
-:global(:root[data-style="retro"]) .appearancePreview { background: var(--surface); border-top: 5px double var(--accent); }
-:global(:root[data-style="retro"]) .profileRow[data-active="true"] { border-left: 4px solid var(--accent); }
-:global(:root[data-style="pixel"]) .heading h1 { letter-spacing: -1px; }
-:global(:root[data-style="pixel"]) .eyebrow::before { border-radius: 0; width: 10px; height: 10px; box-shadow: 3px 3px 0 var(--selected); }
-:global(:root[data-style="pixel"]) .hero { background: var(--surface); border-top: 6px solid var(--accent); }
-:global(:root[data-style="pixel"]) .dictionaryTools, :global(:root[data-style="pixel"]) .appearanceFields label, :global(:root[data-style="pixel"]) .profileRow { border-width: 2px; border-style: solid; border-color: var(--card-border); }
-:global(:root[data-style="pixel"]) .selectField select { border-width: 2px; }
-:global(:root[data-style="pixel"]) .wordColumns { border-bottom: 2px solid var(--accent); }
-:global(:root[data-style="pixel"]) .trainingWord { background: var(--selected); border: 2px solid var(--accent); }
-:global(:root[data-style="pixel"]) .answerOption { border-width: 2px; }
-:global(:root[data-style="pixel"]) .progress, :global(:root[data-style="pixel"]) .progress::-webkit-progress-bar, :global(:root[data-style="pixel"]) .progress::-webkit-progress-value { border-radius: 0; }
-:global(:root[data-style="pixel"]) .progress::-moz-progress-bar { border-radius: 0; }
-:global(:root[data-style="pixel"]) .activityDay { border-radius: 0; }
-:global(:root[data-style="pixel"]) .appearancePreview { background: var(--surface); border-top: 6px solid var(--accent); }
-:global(:root[data-style="orient"]) .eyebrow::before { border-radius: 0; transform: rotate(45deg); }
-:global(:root[data-style="orient"]) .hero { background: radial-gradient(ellipse at right, color-mix(in srgb, var(--accent) 12%, var(--surface)), var(--surface)); }
-:global(:root[data-style="orient"]) .wordColumns { border-bottom: 2px solid var(--card-border); }
-:global(:root[data-style="orient"]) .trainingWord { border: 3px double var(--card-border); background: var(--surface-muted); }
-:global(:root[data-style="orient"]) .optionNumber { border: 1px solid var(--card-border); border-radius: 50%; }
-:global(:root[data-style="orient"]) .appearancePreview { background: radial-gradient(ellipse at top right, var(--selected), var(--surface) 70%); border-top: 4px double var(--accent); }
-:global(:root[data-style="orient"]) .profileRow[data-active="true"] { border-width: 3px; border-style: double; }
+:global(:root[data-style='retro']) .eyebrow {
+    letter-spacing: 2.4px;
+}
+:global(:root[data-style='retro']) .eyebrow::before {
+    border-radius: 0;
+    width: 16px;
+    height: 2px;
+}
+:global(:root[data-style='retro']) .hero {
+    background: var(--surface);
+    border-top: 6px double var(--accent);
+}
+:global(:root[data-style='retro']) .dictionaryTools,
+:global(:root[data-style='retro']) .appearanceFields label {
+    border: 1px dashed var(--card-border);
+}
+:global(:root[data-style='retro']) .wordRow h3 {
+    color: var(--text);
+}
+:global(:root[data-style='retro']) .trainingWord {
+    background: var(--surface-muted);
+    border-top: 1px solid var(--card-border);
+    border-bottom: 3px double var(--card-border);
+}
+:global(:root[data-style='retro']) .optionNumber {
+    border: 1px solid var(--card-border);
+    background: var(--surface);
+}
+:global(:root[data-style='retro']) .appearancePreview {
+    background: var(--surface);
+    border-top: 5px double var(--accent);
+}
+:global(:root[data-style='retro']) .profileRow[data-active='true'] {
+    border-left: 4px solid var(--accent);
+}
+:global(:root[data-style='pixel']) .heading h1 {
+    letter-spacing: -1px;
+}
+:global(:root[data-style='pixel']) .eyebrow::before {
+    border-radius: 0;
+    width: 10px;
+    height: 10px;
+    box-shadow: 3px 3px 0 var(--selected);
+}
+:global(:root[data-style='pixel']) .hero {
+    background: var(--surface);
+    border-top: 6px solid var(--accent);
+}
+:global(:root[data-style='pixel']) .dictionaryTools,
+:global(:root[data-style='pixel']) .appearanceFields label,
+:global(:root[data-style='pixel']) .profileRow {
+    border-width: 2px;
+    border-style: solid;
+    border-color: var(--card-border);
+}
+:global(:root[data-style='pixel']) .selectField select {
+    border-width: 2px;
+}
+:global(:root[data-style='pixel']) .wordColumns {
+    border-bottom: 2px solid var(--accent);
+}
+:global(:root[data-style='pixel']) .trainingWord {
+    background: var(--selected);
+    border: 2px solid var(--accent);
+}
+:global(:root[data-style='pixel']) .answerOption {
+    border-width: 2px;
+}
+:global(:root[data-style='pixel']) .progress,
+:global(:root[data-style='pixel']) .progress::-webkit-progress-bar,
+:global(:root[data-style='pixel']) .progress::-webkit-progress-value {
+    border-radius: 0;
+}
+:global(:root[data-style='pixel']) .progress::-moz-progress-bar {
+    border-radius: 0;
+}
+:global(:root[data-style='pixel']) .activityDay {
+    border-radius: 0;
+}
+:global(:root[data-style='pixel']) .appearancePreview {
+    background: var(--surface);
+    border-top: 6px solid var(--accent);
+}
+:global(:root[data-style='orient']) .eyebrow::before {
+    border-radius: 0;
+    transform: rotate(45deg);
+}
+:global(:root[data-style='orient']) .hero {
+    background: radial-gradient(
+        ellipse at right,
+        color-mix(in srgb, var(--accent) 12%, var(--surface)),
+        var(--surface)
+    );
+}
+:global(:root[data-style='orient']) .wordColumns {
+    border-bottom: 2px solid var(--card-border);
+}
+:global(:root[data-style='orient']) .trainingWord {
+    border: 3px double var(--card-border);
+    background: var(--surface-muted);
+}
+:global(:root[data-style='orient']) .optionNumber {
+    border: 1px solid var(--card-border);
+    border-radius: 50%;
+}
+:global(:root[data-style='orient']) .appearancePreview {
+    background: radial-gradient(ellipse at top right, var(--selected), var(--surface) 70%);
+    border-top: 4px double var(--accent);
+}
+:global(:root[data-style='orient']) .profileRow[data-active='true'] {
+    border-width: 3px;
+    border-style: double;
+}
 
-.previewWord { font-family: var(--heading-font); }
+.previewWord {
+    font-family: var(--heading-font), sans-serif;
+}
 
 /* Daily practice: content first, secondary controls revealed on demand. */
-.compactHeading { margin-bottom: 20px; }
-.compactHeading h1 { margin-top: 0; }
-.compactHeading p { margin-bottom: 0; }
-.dictionarySearch { margin-bottom: 8px; }
-.dictionaryFilters { margin-bottom: 12px; }
-.dictionaryFilters summary, .lengthExtra summary, .progressHelp summary { cursor: pointer; min-height: 44px; padding: 12px 0; font-size: calc(14px + var(--font-offset)); line-height: 1.5; }
-.dictionaryFilters summary { font-weight: 600; }
-.filterState { display: block; padding-top: 4px; color: var(--text-muted); font-size: calc(12px + var(--font-offset)); font-weight: 400; }
-:global(:root[data-style]) .dictionaryFilters .dictionaryTools { grid-template-columns: repeat(2, minmax(0, 1fr)); background: transparent; border: 0; border-radius: 0; padding: 8px 0; margin-bottom: 0; }
-:global(:root[data-style]) .wordColumns.readOnlyColumns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-:global(:root[data-style]) .wordColumns.readOnlyColumns > :last-child { text-align: left; }
-.lengthExtra { width: 100%; }
-.lengthExtra .form { margin-top: 12px; }
-.prepareNote { margin: 0; font-size: calc(13px + var(--font-offset)); line-height: 1.6; color: var(--text-muted); }
-.prepareCard .actions { margin: 0; }
-:global(:root[data-style]) .prepareCard .sessionPreview { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; background: transparent; border-top: 1px solid var(--border); border-radius: 0; padding: 16px 0 0; }
-.questionPane { scroll-margin-top: 16px; }
-.trainingFooter { scroll-margin-bottom: 120px; }
-.homeNumbers { display: flex; flex-wrap: wrap; gap: 20px 32px; margin: 28px 0 20px; font-variant-numeric: tabular-nums; }
-.homeNumbers div { display: grid; gap: 6px; }
-.homeNumbers dt { font-size: calc(13px + var(--font-offset)); color: var(--text-muted); }
-.homeNumbers dd { margin: 0; font-size: calc(24px + var(--font-offset)); font-weight: 600; }
-.homeNumbers dd span { font-size: calc(14px + var(--font-offset)); font-weight: 400; }
-.homeProgressLabel { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-bottom: 10px; font-size: calc(13px + var(--font-offset)); font-variant-numeric: tabular-nums; }
-.progressHelp p, .hero .progressHelp p { max-width: 65ch; margin-top: 0; }
-.hero .homeNextStep { max-width: 60ch; margin: 0; }
-.homeActions { align-items: center; }
-.secondaryLink { margin-top: 16px; font-size: calc(14px + var(--font-offset)); line-height: 1.6; }
-.firstProfileCard { grid-column: 1 / -1; max-width: 640px; width: 100%; }
-.guestContinue { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 12px; }
-.editorTags summary { min-height: 44px; padding: 12px 0; cursor: pointer; color: var(--text-muted); font-size: calc(14px + var(--font-offset)); }
-.firstPractice { margin-top: 20px; }
-.hero .firstPractice > p { max-width: 54ch; }
-:global(:root[data-style]) .heroLink { transition: transform .12s cubic-bezier(0.23, 1, 0.32, 1), background-color .12s ease; }
-:global(:root[data-style]) .heroLink:active { background: var(--accent-hover); }
-:global(:root[data-style]) .heroLink:active:not(:focus-visible) { transform: scale(.98); }
-:global(:root[data-style]) .heroLink:focus-visible, :global(:root[data-style]) .answerOption:focus-visible { transition: none; }
-@media (prefers-reduced-motion: reduce) {
-  :global(:root[data-style]) .heroLink:active:not(:focus-visible) { transform: none; }
+.compactHeading {
+    margin-bottom: 20px;
 }
-.wordPair { display: grid; align-content: center; gap: 8px; padding: 24px 0; }
-.wordPair > span:first-child { font-size: clamp(64px, 8vw, 112px); font-weight: 700; letter-spacing: -.06em; line-height: 1.1; }
-.pairTranslation { color: var(--text-muted); font-size: calc(24px + var(--font-offset)); }
-.pairTranslation > span { margin-right: 12px; color: var(--accent); }
-.profileData { min-width: 0; padding-top: 12px; }
-.backupDetails summary { cursor: pointer; min-height: 44px; padding: 12px 0; font-size: calc(14px + var(--font-offset)); color: var(--text-muted); }
-.backupDetails > p { max-width: 68ch; }
-:global(:root[data-style]) .activeTrainingHeading { margin-bottom: 16px; }
-:global(:root[data-style]) .activeTrainingHeading h1 { font-size: calc(24px + var(--font-offset)); margin-bottom: 0; }
-.activeTrainingHeading p { display: none; }
-.questionPane > p:first-child { margin: 0 0 8px; line-height: 1.5; }
-.trainingCard .options { gap: 12px; margin: 16px 0 0; }
-.trainingCard .answerFeedback { min-height: 52px; }
-.trainingCard .trainingFooter { padding-top: 8px; border-top: 0; }
-:global(:root[data-style]) .wordRow[data-continuation="true"] { border-top: 0; padding-top: 4px; }
+.compactHeading h1 {
+    margin-top: 0;
+}
+.compactHeading p {
+    margin-bottom: 0;
+}
+.dictionarySearch {
+    margin-bottom: 8px;
+}
+.dictionaryFilters {
+    margin-bottom: 12px;
+}
+.dictionaryFilters summary,
+.lengthExtra summary,
+.progressHelp summary {
+    cursor: pointer;
+    min-height: 44px;
+    padding: 12px 0;
+    font-size: calc(14px + var(--font-offset));
+    line-height: 1.5;
+}
+.dictionaryFilters summary {
+    font-weight: 600;
+}
+.filterState {
+    display: block;
+    padding-top: 4px;
+    color: var(--text-muted);
+    font-size: calc(12px + var(--font-offset));
+    font-weight: 400;
+}
+:global(:root[data-style]) .dictionaryFilters .dictionaryTools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 8px 0;
+    margin-bottom: 0;
+}
+:global(:root[data-style]) .wordColumns.readOnlyColumns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+:global(:root[data-style]) .wordColumns.readOnlyColumns > :last-child {
+    text-align: left;
+}
+.lengthExtra {
+    width: 100%;
+}
+.lengthExtra .form {
+    margin-top: 12px;
+}
+.prepareNote {
+    margin: 0;
+    font-size: calc(13px + var(--font-offset));
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+.prepareCard .actions {
+    margin: 0;
+}
+:global(:root[data-style]) .prepareCard .sessionPreview {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 16px;
+    background: transparent;
+    border-top: 1px solid var(--border);
+    border-radius: 0;
+    padding: 16px 0 0;
+}
+.questionPane {
+    scroll-margin-top: 16px;
+}
+.trainingFooter {
+    scroll-margin-bottom: 120px;
+}
+.homeNumbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 32px;
+    margin: 28px 0 20px;
+    font-variant-numeric: tabular-nums;
+}
+.homeNumbers div {
+    display: grid;
+    gap: 6px;
+}
+.homeNumbers dt {
+    font-size: calc(13px + var(--font-offset));
+    color: var(--text-muted);
+}
+.homeNumbers dd {
+    margin: 0;
+    font-size: calc(24px + var(--font-offset));
+    font-weight: 600;
+}
+.homeNumbers dd span {
+    font-size: calc(14px + var(--font-offset));
+    font-weight: 400;
+}
+.homeProgressLabel {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: calc(13px + var(--font-offset));
+    font-variant-numeric: tabular-nums;
+}
+.progressHelp p,
+.hero .progressHelp p {
+    max-width: 65ch;
+    margin-top: 0;
+}
+.hero .homeNextStep {
+    max-width: 60ch;
+    margin: 0;
+}
+.homeActions {
+    align-items: center;
+}
+.secondaryLink {
+    margin-top: 16px;
+    font-size: calc(14px + var(--font-offset));
+    line-height: 1.6;
+}
+.firstProfileCard {
+    grid-column: 1 / -1;
+    max-width: 640px;
+    width: 100%;
+}
+.guestContinue {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-bottom: 12px;
+}
+.editorTags summary {
+    min-height: 44px;
+    padding: 12px 0;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: calc(14px + var(--font-offset));
+}
+.firstPractice {
+    margin-top: 20px;
+}
+.hero .firstPractice > p {
+    max-width: 54ch;
+}
+:global(:root[data-style]) .heroLink {
+    transition:
+        transform 0.12s cubic-bezier(0.23, 1, 0.32, 1),
+        background-color 0.12s ease;
+}
+:global(:root[data-style]) .heroLink:active {
+    background: var(--accent-hover);
+}
+:global(:root[data-style]) .heroLink:active:not(:focus-visible) {
+    transform: scale(0.98);
+}
+:global(:root[data-style]) .heroLink:focus-visible,
+:global(:root[data-style]) .answerOption:focus-visible {
+    transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+    :global(:root[data-style]) .heroLink:active:not(:focus-visible) {
+        transform: none;
+    }
+}
+.wordPair {
+    display: grid;
+    align-content: center;
+    gap: 8px;
+    padding: 24px 0;
+}
+.wordPair > span:first-child {
+    font-size: clamp(64px, 8vw, 112px);
+    font-weight: 700;
+    letter-spacing: -0.06em;
+    line-height: 1.1;
+}
+.pairTranslation {
+    color: var(--text-muted);
+    font-size: calc(24px + var(--font-offset));
+}
+.pairTranslation > span {
+    margin-right: 12px;
+    color: var(--accent);
+}
+.profileData {
+    min-width: 0;
+    padding-top: 12px;
+}
+.backupDetails summary {
+    cursor: pointer;
+    min-height: 44px;
+    padding: 12px 0;
+    font-size: calc(14px + var(--font-offset));
+    color: var(--text-muted);
+}
+.backupDetails > p {
+    max-width: 68ch;
+}
+:global(:root[data-style]) .activeTrainingHeading {
+    margin-bottom: 16px;
+}
+:global(:root[data-style]) .activeTrainingHeading h1 {
+    font-size: calc(24px + var(--font-offset));
+    margin-bottom: 0;
+}
+.activeTrainingHeading p {
+    display: none;
+}
+.questionPane > p:first-child {
+    margin: 0 0 8px;
+    line-height: 1.5;
+}
+.trainingCard .options {
+    gap: 12px;
+    margin: 16px 0 0;
+}
+.trainingCard .answerFeedback {
+    min-height: 52px;
+}
+.trainingCard .trainingFooter {
+    padding-top: 8px;
+    border-top: 0;
+}
+:global(:root[data-style]) .wordRow[data-continuation='true'] {
+    border-top: 0;
+    padding-top: 4px;
+}
 @media (min-width: 1024px) {
-  :global(:root[data-style]) .dictionaryLayout > .grid { grid-template-columns: minmax(0, 1fr) 280px; }
-  .dictionaryLayout .dictionaryCard { grid-column: auto; }
+    :global(:root[data-style]) .dictionaryLayout > .grid {
+        grid-template-columns: minmax(0, 1fr) 280px;
+    }
+    .dictionaryLayout .dictionaryCard {
+        grid-column: auto;
+    }
 }
 @media (max-width: 639px) {
-  .wordPair { grid-row: 1; display: flex; align-items: baseline; gap: 16px; padding: 0; }
-  .wordPair > span:first-child { font-size: calc(44px + var(--font-offset)); }
-  .pairTranslation { font-size: calc(20px + var(--font-offset)); }
-  :global(:root[data-style]) .hero { gap: 12px; }
-  :global(:root[data-style]) .hero h2 { margin-top: 8px; }
-  .wordRow[data-continuation="true"] > p { grid-row: 1; }
-  .compactHeading { margin-bottom: 16px; }
-  .compactHeading h1 { margin-bottom: 8px; }
-  .compactHeading p { line-height: 1.5; }
-  :global(:root[data-style]) .dictionaryCard, :global(:root[data-style]) .prepareCard, :global(:root[data-style]) .trainingCard { padding: 16px; }
-  :global(:root[data-style]) .dictionaryFilters .dictionaryTools { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  :global(:root[data-style]) .prepareCard { gap: 12px; }
-  .prepareCard .actions > button { width: 100%; }
-  :global(:root[data-style]) .prepareCard .sessionPreview { padding-top: 12px; }
-  .activeTrainingHeading p { display: none; }
-  .questionPane > p:first-child { margin: 0 0 8px; line-height: 1.5; }
-  :global(:root[data-style]) .trainingCard .languageLabel { margin: 8px 0 4px; font-size: calc(10px + var(--font-offset)); }
-  :global(:root[data-style]) .trainingCard .trainingWord { margin: 4px 0 12px !important; padding: 4px 0; background: transparent; border: 0; }
-  .trainingCard .options { gap: 8px; margin: 12px 0; }
-  :global(:root[data-style]) .trainingCard .answerOption { min-height: 64px; padding: 8px 12px; grid-template-columns: 28px minmax(0, 1fr); column-gap: 10px; font-size: calc(15px + var(--font-offset)); }
-  :global(:root[data-style]) .trainingCard .optionNumber { width: 28px; height: 28px; grid-row: 1 / 3; }
-  :global(:root[data-style]) .trainingCard .answerOption small { margin-top: 2px; }
-  .trainingCard .answerFeedback { min-height: 44px; }
-  .trainingCard .trainingFooter { padding-top: 12px; }
-  .homeIdentity { margin-top: 0; gap: 12px; flex-direction: column; align-items: flex-start; }
-  .homePhoto { width: 56px; height: 56px; }
-  .hero .homeIdentity h2 { font-size: calc(24px + var(--font-offset)); margin-bottom: 8px; }
-  .homeNumbers { gap: 16px 24px; }
-  .homeNumbers div:first-child { flex-basis: 100%; }
+    .wordPair {
+        grid-row: 1;
+        display: flex;
+        align-items: baseline;
+        gap: 16px;
+        padding: 0;
+    }
+    .wordPair > span:first-child {
+        font-size: calc(44px + var(--font-offset));
+    }
+    .pairTranslation {
+        font-size: calc(20px + var(--font-offset));
+    }
+    :global(:root[data-style]) .hero {
+        gap: 12px;
+    }
+    :global(:root[data-style]) .hero h2 {
+        margin-top: 8px;
+    }
+    .wordRow[data-continuation='true'] > p {
+        grid-row: 1;
+    }
+    .compactHeading {
+        margin-bottom: 16px;
+    }
+    .compactHeading h1 {
+        margin-bottom: 8px;
+    }
+    .compactHeading p {
+        line-height: 1.5;
+    }
+    :global(:root[data-style]) .dictionaryCard,
+    :global(:root[data-style]) .prepareCard,
+    :global(:root[data-style]) .trainingCard {
+        padding: 16px;
+    }
+    :global(:root[data-style]) .dictionaryFilters .dictionaryTools {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    :global(:root[data-style]) .prepareCard {
+        gap: 12px;
+    }
+    .prepareCard .actions > button {
+        width: 100%;
+    }
+    :global(:root[data-style]) .prepareCard .sessionPreview {
+        padding-top: 12px;
+    }
+    .activeTrainingHeading p {
+        display: none;
+    }
+    .questionPane > p:first-child {
+        margin: 0 0 8px;
+        line-height: 1.5;
+    }
+    :global(:root[data-style]) .trainingCard .languageLabel {
+        margin: 8px 0 4px;
+        font-size: calc(10px + var(--font-offset));
+    }
+    :global(:root[data-style]) .trainingCard .trainingWord {
+        margin: 4px 0 12px !important;
+        padding: 4px 0;
+        background: transparent;
+        border: 0;
+    }
+    .trainingCard .options {
+        gap: 8px;
+        margin: 12px 0;
+    }
+    :global(:root[data-style]) .trainingCard .answerOption {
+        min-height: 64px;
+        padding: 8px 12px;
+        grid-template-columns: 28px minmax(0, 1fr);
+        column-gap: 10px;
+        font-size: calc(15px + var(--font-offset));
+    }
+    :global(:root[data-style]) .trainingCard .optionNumber {
+        width: 28px;
+        height: 28px;
+        grid-row: 1 / 3;
+    }
+    :global(:root[data-style]) .trainingCard .answerOption small {
+        margin-top: 2px;
+    }
+    .trainingCard .answerFeedback {
+        min-height: 44px;
+    }
+    .trainingCard .trainingFooter {
+        padding-top: 12px;
+    }
+    .homeIdentity {
+        margin-top: 0;
+        gap: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .homePhoto {
+        width: 56px;
+        height: 56px;
+    }
+    .hero .homeIdentity h2 {
+        font-size: calc(24px + var(--font-offset));
+        margin-bottom: 8px;
+    }
+    .homeNumbers {
+        gap: 16px 24px;
+    }
+    .homeNumbers div:first-child {
+        flex-basis: 100%;
+    }
 }
 
-.lengthField { display: grid; align-content: start; gap: 12px; font-size: calc(14px + var(--font-offset)); color: var(--text-muted); }
-:global(:root[data-style]) .prepareCard > .lengthField { grid-column: auto; }
-.lengthChoices { display: flex; gap: 8px; }
-.lengthChoices > button { flex: 1; }
-.sessionPreview { display: grid; gap: 6px; padding: 16px; border-radius: var(--radius-control); background: var(--surface-muted); }
-.sessionPreview strong { font-size: calc(20px + var(--font-offset)); }
-.sessionPreview span { color: var(--text-muted); font-size: calc(14px + var(--font-offset)); }
-.helpDetails summary, .tagDetails summary { min-height: 44px; cursor: pointer; padding: 10px 0; }
-.answerFeedback { min-height: 64px; display: flex; align-items: center; }
-.answerFeedback p { margin: 0; line-height: 1.6; }
-.optionStatus { min-height: 1.5em; line-height: 1.5; font-size: calc(12px + var(--font-offset)); }
-:global(:root[data-style]) .answerOption.correctOption { border-color: var(--success); background: color-mix(in srgb, var(--success) 12%, var(--surface)); }
-:global(:root[data-style]) .answerOption.incorrectOption { border-color: var(--error); background: color-mix(in srgb, var(--error) 8%, var(--surface)); }
-.trainingFooter { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-.keyboardHint { color: var(--text-muted); font-size: calc(12px + var(--font-offset)); margin: 0; }
-.resultCard { text-align: center; max-width: 800px; margin: 0 auto; }
-.resultScore { display: grid; gap: 8px; margin: 32px 0; }
-.resultScore > strong { font-size: clamp(40px, 7vw, 64px); color: var(--accent); }
-.resultScore strong span { font-size: calc(24px + var(--font-offset)); color: var(--text); }
-.resultScore > span, .resultMetrics span { font-size: calc(14px + var(--font-offset)); color: var(--text-muted); }
-.resultMetrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.resultMetrics > div { display: grid; align-content: start; gap: 8px; background: var(--surface-muted); padding: 20px 12px; border-radius: var(--radius-control); }
-.resultMetrics strong { font-size: calc(26px + var(--font-offset)); }
-.resultActions { display: grid; justify-items: center; gap: 20px; margin-top: 24px; }
-.resultActions > div { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; }
-.transferActions { display: grid; gap: 12px; margin: 24px 0; }
-.tagDetails summary { font-weight: 700; font-size: calc(20px + var(--font-offset)); }
-.tagDetails summary span { color: var(--text-muted); font-size: calc(14px + var(--font-offset)); margin-left: 8px; }
-.tagContent { min-width: 0; }
+.lengthField {
+    display: grid;
+    align-content: start;
+    gap: 12px;
+    font-size: calc(14px + var(--font-offset));
+    color: var(--text-muted);
+}
+:global(:root[data-style]) .prepareCard > .lengthField {
+    grid-column: auto;
+}
+.lengthChoices {
+    display: flex;
+    gap: 8px;
+}
+.lengthChoices > button {
+    flex: 1;
+}
+.sessionPreview {
+    display: grid;
+    gap: 6px;
+    padding: 16px;
+    border-radius: var(--radius-control);
+    background: var(--surface-muted);
+}
+.sessionPreview strong {
+    font-size: calc(20px + var(--font-offset));
+}
+.sessionPreview span {
+    color: var(--text-muted);
+    font-size: calc(14px + var(--font-offset));
+}
+.helpDetails summary,
+.tagDetails summary {
+    min-height: 44px;
+    cursor: pointer;
+    padding: 10px 0;
+}
+.answerFeedback {
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+}
+.answerFeedback p {
+    margin: 0;
+    line-height: 1.6;
+}
+.optionStatus {
+    min-height: 1.5em;
+    line-height: 1.5;
+    font-size: calc(12px + var(--font-offset));
+}
+:global(:root[data-style]) .answerOption.correctOption {
+    border-color: var(--success);
+    background: color-mix(in srgb, var(--success) 12%, var(--surface));
+}
+:global(:root[data-style]) .answerOption.incorrectOption {
+    border-color: var(--error);
+    background: color-mix(in srgb, var(--error) 8%, var(--surface));
+}
+.trainingFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+.keyboardHint {
+    color: var(--text-muted);
+    font-size: calc(12px + var(--font-offset));
+    margin: 0;
+}
+.resultCard {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+.resultScore {
+    display: grid;
+    gap: 8px;
+    margin: 32px 0;
+}
+.resultScore > strong {
+    font-size: clamp(40px, 7vw, 64px);
+    color: var(--accent);
+}
+.resultScore strong span {
+    font-size: calc(24px + var(--font-offset));
+    color: var(--text);
+}
+.resultScore > span,
+.resultMetrics span {
+    font-size: calc(14px + var(--font-offset));
+    color: var(--text-muted);
+}
+.resultMetrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+.resultMetrics > div {
+    display: grid;
+    align-content: start;
+    gap: 8px;
+    background: var(--surface-muted);
+    padding: 20px 12px;
+    border-radius: var(--radius-control);
+}
+.resultMetrics strong {
+    font-size: calc(26px + var(--font-offset));
+}
+.resultActions {
+    display: grid;
+    justify-items: center;
+    gap: 20px;
+    margin-top: 24px;
+}
+.resultActions > div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+}
+.transferActions {
+    display: grid;
+    gap: 12px;
+    margin: 24px 0;
+}
+.tagDetails summary {
+    font-weight: 700;
+    font-size: calc(20px + var(--font-offset));
+}
+.tagDetails summary span {
+    color: var(--text-muted);
+    font-size: calc(14px + var(--font-offset));
+    margin-left: 8px;
+}
+.tagContent {
+    min-width: 0;
+}
 @media (max-width: 639px) {
-  .trainingFooter { flex-wrap: wrap; }
-  .keyboardHint { display: none; }
-  .trainingFooter > button { margin-left: auto; }
-  .resultMetrics { grid-template-columns: minmax(0, 1fr); }
-  .resultMetrics > div { grid-template-columns: auto 1fr; align-items: center; text-align: left; padding: 16px; }
-  .resultMetrics span { text-align: right; }
-  .resultActions > button { width: 100%; }
-  .answerFeedback { min-height: 76px; }
+    .trainingFooter {
+        flex-wrap: wrap;
+    }
+    .keyboardHint {
+        display: none;
+    }
+    .trainingFooter > button {
+        margin-left: auto;
+    }
+    .resultMetrics {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .resultMetrics > div {
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        text-align: left;
+        padding: 16px;
+    }
+    .resultMetrics span {
+        text-align: right;
+    }
+    .resultActions > button {
+        width: 100%;
+    }
+    .answerFeedback {
+        min-height: 76px;
+    }
 }
